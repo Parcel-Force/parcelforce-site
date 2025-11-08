@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <script type="module" src="admin.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    .form-section {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #0078D4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005A9E;
+    }
+    #feedback {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-section">
+    <h2>Add Parcel</h2>
+    <input type="text" id="trackingNumber" placeholder="Tracking Number" />
+    <input type="text" id="sender" placeholder="Sender Name" />
+    <input type="text" id="receiver" placeholder="Receiver Name" />
+    <input type="text" id="address" placeholder="Delivery Address" />
+    <input type="text" id="phone" placeholder="Phone Number" />
+    <input type="email" id="email" placeholder="Email Address" />
+    <input type="number" id="deliveryFee" placeholder="Delivery Fee" />
+    <input type="date" id="estimatedDelivery" placeholder="Estimated Delivery Date" />
+    <textarea id="status" placeholder="Status updates (one per line: timestamp | location | status | details)"></textarea>
+    <input type="text" id="latitude" placeholder="Latitude (e.g. -26.2041)" />
+    <input type="text" id="longitude" placeholder="Longitude (e.g. 28.0473)" />
+    <button onclick="submitParcel()">Submit Parcel</button>
+    <p id="feedback"></p>
+  </div>
+</body>
+</html>
