@@ -1,64 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>ParcelForce</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parcel Tracking</title>
+  <link rel="icon" href="logo.png.jpg" type="image/jpeg" />
   <style>
     :root {
-      --bg-color: #121212;
-      --text-color: #f0f0f0;
-      --accent-color: #007bff;
-      --button-hover: #0056b3;
+      --bg-color: #f9f9f9;
+      --text-color: #333;
+      --section-bg: #fff;
+      --input-bg: #fff;
+      --button-bg: #0078D4;
+      --button-hover: #005A9E;
     }
+
     body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg-color);
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      background: var(--bg-color);
       color: var(--text-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
       text-align: center;
+      transition: background 0.3s, color 0.3s;
     }
-    img.logo {
-      width: 120px;
-      margin-bottom: 20px;
-      border-radius: 8px;
+
+    .section {
+      background: var(--section-bg);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      max-width: 600px;
+      margin: 0 auto;
     }
-    h1 {
-      font-size: 2.8em;
-      margin-bottom: 0.5em;
+
+    input {
+      padding: 10px;
+      width: 70%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: var(--input-bg);
+      color: var(--text-color);
     }
-    p {
-      font-size: 1.2em;
-      margin-bottom: 1.5em;
-    }
-    a.button {
-      display: inline-block;
-      padding: 12px 24px;
-      background-color: var(--accent-color);
+
+    button {
+      padding: 10px 15px;
+      background-color: var(--button-bg);
       color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: bold;
-      margin: 8px;
-      transition: background-color 0.3s ease;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
-    a.button:hover {
+
+    button:hover {
       background-color: var(--button-hover);
+    }
+
+    .logo {
+      width: 100%;
+      height: auto;
+      margin-bottom: 30px;
+    }
+
+    .toggle-container {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+
+    .footer {
+      background-color: #f0f4f8;
+      padding: 40px 20px;
+      margin-top: 60px;
+      animation: fadeIn 1.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .dark-mode {
+      --bg-color: #1f1f1f;
+      --text-color: #f0f0f0;
+      --section-bg: #2c2c2c;
+      --input-bg: #333;
+      --button-bg: #52c41a;
+      --button-hover: #389e0d;
     }
   </style>
 </head>
 <body>
-  <img src="logo.png.jpg" alt="ParcelForce Logo" class="logo">
-  <h1>Welcome to ParcelForce</h1>
-  <p>Your parcel is in good hands.<br>Real-time tracking coming soon.</p>
-  <a href="track.html" class="button">Track Your Parcel</a>
-  <a href="https://wa.me/447000000000?text=Hi%20ParcelForce%2C%20I%20have%20a%20question%20about%20my%20parcel." class="button" target="_blank">Contact via WhatsApp</a>
+  <div class="toggle-container">
+    <label>
+      <input type="checkbox" onchange="toggleDarkMode()" />
+      🌙 Dark Mode
+    </label>
+  </div>
+
+  <div style="text-align: center;">
+    <img src="logo.png.jpg" alt="ParcelForce Logo" style="width: 500px; height: auto; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+  </div>
+
+  <div class="section">
+    <h2>Track Your Parcel</h2>
+    <p>Enter your reference number below:</p>
+    <p style="font-size: 0.9em;">
+      Your parcel number may contain letters and numbers. It can vary in length – 9, 11, 13, 14, 16 or 21 characters.<br>
+      e.g. <strong>'WP1234567'</strong>
+    </p>
+    <input type="text" id="trackingInput" placeholder="Enter tracking number" />
+    <br><br>
+    <button onclick="trackItem()">Track Item</button>
+  </div>
+
+  <div class="footer">
+    <img src="logo.png.jpg" alt="ParcelForce Logo" style="width: 280px; height: auto; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.12); margin-bottom: 20px;" />
+    <hr style="margin: 30px auto; width: 80%;" />
+    <p style="font-size: 0.95em;">
+      <strong>ParcelForce International Courier</strong> &copy; 2025. All rights reserved.
+    </p>
+    <p style="font-size: 0.9em;">
+      📧 Email: <a href="mailto:Parcel_Force1986@outlook.com" style="color: #0078D4;">Parcel_Force1986@outlook.com</a><br>
+      💬 WhatsApp: <a href="https://wa.me/27633373857" target="_blank" style="color: #0078D4;">+27 63 337 3857</a>
+    </p>
+  </div>
+
+  <script>
+    function trackItem() {
+      const input = document.getElementById('trackingInput').value.trim();
+      if (input) {
+        window.location.href = `track.html?ref=${encodeURIComponent(input)}`;
+      } else {
+        alert("Please enter a tracking number.");
+      }
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+  </script>
 </body>
 </html>
-
