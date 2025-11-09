@@ -4,18 +4,50 @@
   <meta charset="UTF-8" />
   <title>Admin Dashboard</title>
   <script type="module" src="admin.js"></script>
+  <script type="module">
+    import { db } from './firebase.js';
+    import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+
+    window.loadParcels = function () {
+      const list = document.getElementById('parcelList');
+      list.innerHTML = 'Loading parcels...';
+
+      const parcelsRef = ref(db, 'parcels');
+      onValue(parcelsRef, (snapshot) => {
+        list.innerHTML = '';
+        if (!snapshot.exists()) {
+          list.innerHTML = '<p>No parcels found.</p>';
+          return;
+        }
+
+        const data = snapshot.val();
+        Object.entries(data).forEach(([tracking, parcel]) => {
+          const item = document.createElement('div');
+          item.style.borderBottom = '1px solid #ccc';
+          item.style.padding = '10px 0';
+          item.innerHTML = `
+            <strong>${tracking}</strong><br>
+            ${parcel.sender} → ${parcel.receiver}<br>
+            Status: ${parcel.status?.[parcel.status.length - 1]?.status || 'Unknown'}<br>
+            <button onclick="alert(JSON.stringify(${JSON.stringify(parcel)}, null, 2))">View Details</button>
+          `;
+          list.appendChild(item);
+        });
+      });
+    };
+  </script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       padding: 20px;
       background: #f4f4f4;
     }
-    .form-section {
+    .form-section, .dashboard-section {
       background: #fff;
       padding: 20px;
       border-radius: 8px;
       max-width: 600px;
-      margin: 0 auto;
+      margin: 20px auto;
       box-shadow: 0 0 10px rgba(0,0,0,0.05);
     }
     input, textarea {
@@ -32,33 +64,74 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      margin-right: 10px;
     }
     button:hover {
       background-color: #005A9E;
     }
-    #feedback {
+    #feedback, #loading {
       margin-top: 10px;
       font-weight: bold;
       color: #2c3e50;
     }
+    #authGate {
+      text-align: center;
+      margin-top: 100px;
+    }
   </style>
 </head>
 <body>
-  <div class="form-section">
-    <h2>Add Parcel</h2>
-    <input type="text" id="trackingNumber" placeholder="Tracking Number" />
-    <input type="text" id="sender" placeholder="Sender Name" />
-    <input type="text" id="receiver" placeholder="Receiver Name" />
-    <input type="text" id="address" placeholder="Delivery Address" />
-    <input type="text" id="phone" placeholder="Phone Number" />
-    <input type="email" id="email" placeholder="Email Address" />
-    <input type="number" id="deliveryFee" placeholder="Delivery Fee" />
-    <input type="date" id="estimatedDelivery" placeholder="Estimated Delivery Date" />
-    <textarea id="status" placeholder="Status updates (one per line: timestamp | location | status | details)"></textarea>
-    <input type="text" id="latitude" placeholder="Latitude (e.g. -26.2041)" />
-    <input type="text" id="longitude" placeholder="Longitude (e.g. 28.0473)" />
-    <button onclick="submitParcel()">Submit Parcel</button>
-    <p id="feedback"></p>
+
+  <div id="authGate">
+    <h2>Admin Access</h2>
+    <input type="password" id="adminPass" placeholder="Enter admin password" />
+    <br><br>
+    <button onclick="checkAccess()">Enter Dashboard</button>
+    <p id="authFeedback"></p>
   </div>
+
+  <div id="adminContent" style="display:none;">
+    <div class="dashboard-section">
+      <h2>📦 Submitted Parcels</h2>
+      <button onclick="loadParcels()">🔄 Refresh List</button>
+      <div id="parcelList" style="margin-top: 20px;"></div>
+    </div>
+
+    <div class="form-section">
+      <h2>Add Parcel</h2>
+      <form onsubmit="event.preventDefault(); submitParcel();">
+        <input type="text" id="trackingNumber" placeholder="Tracking Number" aria-label="Tracking Number" />
+        <input type="text" id="sender" placeholder="Sender Name" aria-label="Sender Name" />
+        <input type="text" id="receiver" placeholder="Receiver Name" aria-label="Receiver Name" />
+        <input type="text" id="address" placeholder="Delivery Address" aria-label="Delivery Address" />
+        <input type="text" id="phone" placeholder="Phone Number" aria-label="Phone Number" />
+        <input type="email" id="email" placeholder="Email Address" aria-label="Email Address" />
+        <input type="number" id="deliveryFee" placeholder="Delivery Fee" aria-label="Delivery Fee" />
+        <input type="date" id="estimatedDelivery" placeholder="Estimated Delivery Date" aria-label="Estimated Delivery Date" />
+        <textarea id="status" placeholder="Status updates (one per line: timestamp | location | status | details)" aria-label="Status updates"></textarea>
+        <input type="text" id="latitude" placeholder="Latitude (e.g. -26.2041)" aria-label="Latitude" />
+        <input type="text" id="longitude" placeholder="Longitude (e.g. 28.0473)" aria-label="Longitude" />
+        <button type="submit">Submit Parcel</button>
+        <button type="reset">Clear Form</button>
+      </form>
+      <p id="loading">Submitting parcel...</p>
+      <p id="feedback"></p>
+    </div>
+  </div>
+
+  <script>
+    function checkAccess() {
+      const pass = document.getElementById('adminPass').value.trim();
+      const feedback = document.getElementById('authFeedback');
+      if (pass === 'ParcelForce2025') {
+        document.getElementById('authGate').style.display = 'none';
+        document.getElementById('adminContent').style.display = 'block';
+        loadParcels();
+      } else {
+        feedback.style.color = 'red';
+        feedback.textContent = 'Incorrect password. Access denied.';
+      }
+    }
+  </script>
 </body>
 </html>

@@ -6,15 +6,20 @@
   <title>Parcel Tracker</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- SEO & Social Preview -->
+  <meta name="description" content="Track your parcel in real-time with ParcelForce International Courier." />
+  <meta property="og:title" content="Parcel Tracker | ParcelForce" />
+  <meta property="og:image" content="logo.png.jpg" />
+
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       padding: 20px;
       background: #f9f9f9;
-    }
-    h2, h3 {
       color: #2c3e50;
     }
+
     .section {
       background: #fff;
       padding: 20px;
@@ -23,54 +28,51 @@
       max-width: 600px;
       margin: 0 auto 40px;
     }
-    .status {
-      font-weight: bold;
-      padding: 6px 12px;
-      border-radius: 8px;
-      display: inline-block;
-      margin-bottom: 10px;
+
+    h2, h3 {
+      color: #2c3e50;
     }
-    .in-transit { background-color: #ffe58f; color: #8c6d1f; }
-    .delivered { background-color: #d9f7be; color: #389e0d; }
-    .pending { background-color: #e6f7ff; color: #096dd9; }
+
     .status-list li {
       margin-bottom: 10px;
     }
+
     .progress-bar {
       background-color: #eee;
       border-radius: 5px;
       height: 10px;
       margin: 10px 0;
     }
+
     .progress {
       background-color: #0078D4;
       height: 100%;
       width: 60%;
       border-radius: 5px;
     }
+
     .progress-container {
       display: flex;
       justify-content: space-between;
       margin: 20px 0;
     }
+
     .progress-step {
       flex: 1;
       text-align: center;
       padding: 10px;
       border-bottom: 4px solid #ccc;
     }
+
     .progress-step.active {
       border-color: #52c41a;
       font-weight: bold;
     }
-    #map {
-      height: 300px;
-      margin-top: 20px;
-      border-radius: 8px;
-    }
+
     .privacy-toggle {
       margin: 20px 0;
     }
+
     .support-btn {
       margin: 10px 5px;
       padding: 10px 15px;
@@ -80,9 +82,11 @@
       border-radius: 6px;
       cursor: pointer;
     }
+
     .support-btn:hover {
       background-color: #005a9e;
     }
+
     .alert {
       background-color: #fff3cd;
       color: #856404;
@@ -90,13 +94,19 @@
       border-radius: 6px;
       margin-top: 20px;
     }
+
+    #map {
+      height: 300px;
+      margin-top: 20px;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
 
   <div class="section" id="parcelDetails">
-    <h2>Tracking Number: RB123456789CN</h2>
-    <p><strong>Last Updated:</strong> 2025-11-08T14:30:00Z</p>
+    <h2 id="trackingNumber">Tracking Number: RB123456789CN</h2>
+    <p><strong>Last Updated:</strong> <span id="lastUpdated">2025-11-08T14:30:00Z</span></p>
 
     <div class="progress-bar">
       <div class="progress"></div>
@@ -110,7 +120,7 @@
     </div>
 
     <div class="privacy-toggle">
-      <label><input type="checkbox" id="revealInfo" onchange="toggleInfo()"> Show recipient details</label>
+      <label><input type="checkbox" id="revealInfo" onchange="toggleInfo()" aria-label="Toggle recipient details" /> Show recipient details</label>
     </div>
     <div id="recipientInfo" style="display: none;">
       <p><strong>Sender:</strong> Joseph Njoku</p>
@@ -132,9 +142,9 @@
       ⚠ Customs and delivery fee of <strong>R120</strong> must be paid before parcel can proceed for Delivery
     </div>
 
-    <button class="support-btn" onclick="window.location.href='index.html'">🔙 Back to Home</button>
-    <button class="support-btn" onclick="window.open('https://wa.me/27633373857', '_blank')">WhatsApp Support</button>
-    <button class="support-btn" onclick="alert('Redirecting to secure payment portal...')">Pay Customs Fee</button>
+    <button class="support-btn" onclick="window.location.href='index.html'" aria-label="Back to home">🔙 Back to Home</button>
+    <button class="support-btn" onclick="window.open('https://wa.me/27633373857', '_blank')" aria-label="Contact WhatsApp support">WhatsApp Support</button>
+    <button class="support-btn" onclick="alert('Redirecting to secure payment portal...')" aria-label="Pay customs fee">Pay Customs Fee</button>
 
     <div id="map"></div>
   </div>
@@ -145,10 +155,18 @@
       info.style.display = document.getElementById('revealInfo').checked ? 'block' : 'none';
     }
 
+    // Initialize map
     const map = L.map('map').setView([-26.2041, 28.0473], 10);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
+
+    // Optional: dynamically load tracking number from URL
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    if (ref) {
+      document.getElementById('trackingNumber').textContent = `Tracking Number: ${ref}`;
+    }
   </script>
 
 </body>

@@ -4,24 +4,37 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Parcel Tracking</title>
-  <link rel="icon" href="logo.png.jpg" type="image/jpeg" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+  <!-- SEO & Social Preview -->
+  <meta name="description" content="Track your parcel with ParcelForce International Courier. Fast, reliable, and secure." />
+  <meta property="og:title" content="Parcel Tracking | ParcelForce" />
+  <meta property="og:image" content="logo.png.jpg" />
+
   <style>
-    :root {
+    body {
       --bg-color: #f9f9f9;
       --text-color: #333;
       --section-bg: #fff;
       --input-bg: #fff;
       --button-bg: #0078D4;
       --button-hover: #005A9E;
-    }
 
-    body {
       font-family: 'Segoe UI', sans-serif;
       padding: 20px;
       background: var(--bg-color);
       color: var(--text-color);
       text-align: center;
       transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+      --bg-color: #1f1f1f;
+      --text-color: #f0f0f0;
+      --section-bg: #2c2c2c;
+      --input-bg: #333;
+      --button-bg: #52c41a;
+      --button-hover: #389e0d;
     }
 
     .section {
@@ -77,15 +90,6 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    .dark-mode {
-      --bg-color: #1f1f1f;
-      --text-color: #f0f0f0;
-      --section-bg: #2c2c2c;
-      --input-bg: #333;
-      --button-bg: #52c41a;
-      --button-hover: #389e0d;
-    }
   </style>
 </head>
 <body>
@@ -107,9 +111,9 @@
       Your parcel number may contain letters and numbers. It can vary in length – 9, 11, 13, 14, 16 or 21 characters.<br>
       e.g. <strong>'WP1234567'</strong>
     </p>
-    <input type="text" id="trackingInput" placeholder="Enter tracking number" />
+    <input type="text" id="trackingInput" placeholder="Enter tracking number" aria-label="Tracking number input" />
     <br><br>
-    <button onclick="trackItem()">Track Item</button>
+    <button onclick="trackItem()" aria-label="Track parcel">Track Item</button>
   </div>
 
   <div class="footer">
@@ -127,10 +131,15 @@
   <script>
     function trackItem() {
       const input = document.getElementById('trackingInput').value.trim();
-      if (input) {
-        window.location.href = `track.html?ref=${encodeURIComponent(input)}`;
+      const pattern = /^[A-Z0-9]{9,21}$/i;
+      if (input && pattern.test(input)) {
+        const button = document.querySelector('button');
+        button.innerText = "Tracking...";
+        setTimeout(() => {
+          window.location.href = `track.html?ref=${encodeURIComponent(input)}`;
+        }, 300);
       } else {
-        alert("Please enter a tracking number.");
+        alert("Please enter a valid tracking number.");
       }
     }
 
