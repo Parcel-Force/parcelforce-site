@@ -68,44 +68,44 @@
       margin-top: 20px;
       border-radius: 8px;
     }
-    .centered-message {
-      text-align: center;
-      padding: 40px 20px;
+    .privacy-toggle {
+      margin: 20px 0;
     }
-    .centered-message h2 {
-      color: #c0392b;
+    .support-btn {
+      margin: 10px 5px;
+      padding: 10px 15px;
+      background-color: #0078D4;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
-    .centered-message p {
-      font-size: 0.95em;
-      color: #555;
+    .support-btn:hover {
+      background-color: #005a9e;
     }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-    #dots {
-      animation: blink 1s infinite;
+    .alert {
+      background-color: #fff3cd;
+      color: #856404;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
-  <div id="loading" style="text-align:center; padding:20px;">
-    <p>Loading parcel data<span id="dots">...</span></p>
-  </div>
+  <div class="section" id="parcelDetails">
+    <h2>Tracking Number: RB123456789CN</h2>
+    <p><strong>Last Updated:</strong> 2025-11-08T14:30:00Z</p>
 
-  <div class="section" id="parcelDetails" style="display: none;">
-    <h2>Tracking Number: <span id="trackingNumber"></span></h2>
-    <p><strong>Last Updated:</strong> <span id="timestamp"></span></p>
-
-    <div class="progress-bar" aria-hidden="true">
-      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+    <div class="progress-bar">
+      <div class="progress"></div>
     </div>
 
     <h3>Parcel Journey</h3>
     <div class="progress-container">
-      <div class="progress-step">📦 Picked Up</div>
-      <div class="progress-step">🚚 In Transit</div>
+      <div class="progress-step active">📦 Picked Up</div>
+      <div class="progress-step active">🚚 In Transit</div>
       <div class="progress-step">🏁 Delivered</div>
     </div>
 
@@ -113,21 +113,23 @@
       <label><input type="checkbox" id="revealInfo" onchange="toggleInfo()"> Show recipient details</label>
     </div>
     <div id="recipientInfo" style="display: none;">
-      <p><strong>Sender:</strong> <span id="sender"></span></p>
-      <p><strong>Receiver:</strong> <span id="receiver"></span></p>
-      <p><strong>Address:</strong> <span id="address"></span></p>
-      <p><strong>Phone:</strong> <span id="phone"></span></p>
-      <p><strong>Email:</strong> <span id="email"></span></p>
+      <p><strong>Sender:</strong> Joseph Njoku</p>
+      <p><strong>Receiver:</strong> Amina Yusuf</p>
+      <p><strong>Address:</strong> 45 Rosebank Avenue, Johannesburg</p>
+      <p><strong>Phone:</strong> +27 63 337 3857</p>
+      <p><strong>Email:</strong> amina@example.com</p>
     </div>
 
-    <p><strong>Delivery Fee:</strong> <span id="deliveryFee"></span></p>
-    <p><strong>Estimated Delivery:</strong> <span id="estimatedDelivery"></span></p>
+    <p><strong>Delivery Fee:</strong> R120</p>
+    <p><strong>Estimated Delivery:</strong> 2025-11-10</p>
 
     <h3>Status Updates</h3>
-    <ul id="status" class="status-list"></ul>
+    <ul class="status-list">
+      <li><strong>Last Checkpoint:</strong> OR Tambo Airport — Arrived at customs</li>
+    </ul>
 
-    <div class="alert" role="status" aria-live="polite" id="customsAlert" style="display: none;">
-      ⚠ Customs and delivery fee of <strong id="feeAmount"></strong> must be paid before parcel can proceed for Delivery
+    <div class="alert">
+      ⚠ Customs and delivery fee of <strong>R120</strong> must be paid before parcel can proceed for Delivery
     </div>
 
     <button class="support-btn" onclick="window.location.href='index.html'">🔙 Back to Home</button>
@@ -137,23 +139,11 @@
     <div id="map"></div>
   </div>
 
-  <div class="centered-message" id="fallbackMessage" style="display: none;">
-    <h2>No parcel found for tracking number: <span id="missingRef">null</span></h2>
-    <hr style="margin: 30px auto; width: 80%;" />
-    <p>ParcelForce International Courier &copy; 2025. All rights reserved.</p>
-    <p>
-      Email: <a href="mailto:Parcel_Force1986@outlook.com">Parcel_Force1986@outlook.com</a> |
-      WhatsApp: <a href="https://wa.me/27633373857" target="_blank">+27 63 337 3857</a>
-    </p>
-  </div>
-
   <script>
     function toggleInfo() {
       const info = document.getElementById('recipientInfo');
       info.style.display = document.getElementById('revealInfo').checked ? 'block' : 'none';
     }
-
-    document.getElementById("timestamp").textContent = new Date().toLocaleString();
 
     const map = L.map('map').setView([-26.2041, 28.0473], 10);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -161,6 +151,5 @@
     }).addTo(map);
   </script>
 
-  <script type="module" src="track.js"></script>
 </body>
 </html>
