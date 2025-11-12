@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ParcelForce Client Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="portal.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      padding: 40px;
+      color: #333;
+    }
+
+    .portal {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0078D4;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #0078D4;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005a9e;
+    }
+
+    .result-card {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-left: 5px solid #0078D4;
+      border-radius: 6px;
+    }
+
+    .result-card a {
+      display: inline-block;
+      margin-top: 10px;
+      color: #0078D4;
+      text-decoration: none;
+    }
+
+    .result-card a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="portal">
+    <h2>📦 ParcelForce Client Portal</h2>
+    <input type="text" id="searchInput" placeholder="Enter your tracking number" />
+    <button onclick="searchParcel()">🔍 Search</button>
+    <div id="resultArea"></div>
+  </div>
+</body>
+</html>

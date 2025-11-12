@@ -1,0 +1,261 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f2f2f2;
+  margin: 0;
+  padding: 0;
+}
+
+.invoice {
+  position: relative;
+  max-width: 850px;
+  margin: 40px auto;
+  background-color: #fcfcfc;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.invoice::before {
+  content: "ParcelForce";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 100px;
+  color: rgba(214, 0, 28, 0.025);
+  font-weight: 900;
+  pointer-events: none;
+  z-index: 0;
+  white-space: nowrap;
+}
+
+.header-banner {
+  background: linear-gradient(90deg, #d6001c, #b00018);
+  color: white;
+  padding: 26px 30px;
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  box-shadow: inset 0 -4px 0 #f5c542;
+}
+
+.section {
+  padding: 22px 30px;
+  border-bottom: 1px solid #eee;
+  background-color: #f8f8f8;
+}
+
+.section:nth-child(even) {
+  background-color: #f3f3f3;
+}
+
+.section h3 {
+  font-size: 18px;
+  color: #d6001c;
+  margin-bottom: 12px;
+  border-left: 4px solid #f5c542;
+  padding-left: 10px;
+}
+
+.field {
+  margin: 6px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.label {
+  font-weight: 600;
+  color: #444;
+  width: 140px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.item-table th,
+.item-table td,
+.summary-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.item-table th {
+  background-color: #ececec;
+  font-weight: 600;
+  color: #333;
+}
+
+.summary-table td:first-child {
+  font-weight: bold;
+  width: 180px;
+  color: #444;
+}
+
+.summary-table td:last-child {
+  color: #c00016;
+  font-weight: bold;
+}
+
+.qr-section {
+  padding: 20px 30px;
+}
+
+.qr-box {
+  border: 1px dashed #ccc;
+  border-radius: 6px;
+  padding: 14px;
+  text-align: center;
+  background-color: #f4f4f4;
+  max-width: 300px;
+  margin: 0 auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+canvas#qrCodeCanvas {
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  margin-bottom: 8px;
+}
+
+.signature {
+  text-align: center;
+  padding: 20px 30px;
+}
+
+.signature-line {
+  border-top: 1px solid #ccc;
+  margin-top: 10px;
+  width: 200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footer {
+  text-align: center;
+  font-size: 0.85em;
+  color: #777;
+  padding: 20px;
+  background-color: #f2f2f2;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.footer strong {
+  color: #d6001c;
+}
+
+button#printBtn {
+  display: block;
+  margin: 20px auto;
+  padding: 12px 24px;
+  background-color: #d6001c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button#printBtn:hover {
+  background-color: #b00018;
+}
+
+/* === Dashboard Styles === */
+:root {
+  --primary: #c8102e;
+  --accent: #f2f2f2;
+  --text: #2c3e50;
+}
+
+.dashboard {
+  max-width: 800px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.dashboard h2 {
+  text-align: center;
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+#userEmail {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.dashboard button {
+  display: block;
+  margin: 0 auto 30px;
+  padding: 10px 24px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.dashboard button:hover {
+  background-color: #a50e24;
+}
+
+.parcel-card {
+  background: var(--accent);
+  border-left: 5px solid var(--primary);
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.parcel-card strong {
+  color: var(--text);
+}
+
+.parcel-card a {
+  display: inline-block;
+  margin-top: 10px;
+  margin-right: 15px;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.parcel-card a:hover {
+  text-decoration: underline;
+}
+
+.dashboard-logo {
+  display: block;
+  margin: 0 auto 24px;
+  max-width: 160px;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 600px) {
+  .dashboard {
+    padding: 20px;
+  }
+
+  .parcel-card {
+    font-size: 14px;
+  }
+
+  .dashboard button {
+    width: 100%;
+  }
+}

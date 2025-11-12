@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Client Login | ParcelForce</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      padding: 40px;
+      color: #333;
+    }
+
+    .auth-box {
+      max-width: 400px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    h2 {
+      text-align: center;
+      color: #c8102e;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #c8102e;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #a50e24;
+    }
+
+    #feedback {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .back-link a {
+      color: #c8102e;
+      text-decoration: none;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-box">
+    <h2>🔐 Client Login</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button id="loginBtn">Log In</button>
+    <button id="signupBtn" style="margin-top:10px;">Sign Up</button>
+    <p id="feedback"></p>
+    <div class="back-link">
+      <a href="index.html">← Back to Home</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBqymK8EWPa9s7c_2uTUXzBONK3XfTipFU",
+      authDomain: "parcelforcetracker.firebaseapp.com",
+      projectId: "parcelforcetracker",
+      appId: "1:408904759435:web:eba15d67580426198bbc8e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const feedback = document.getElementById('feedback');
+
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          feedback.textContent = "✅ Logged in";
+          window.location.href = "dashboard.html";
+        })
+        .catch((error) => {
+          feedback.textContent = "❌ " + error.message;
+        });
+    });
+
+    document.getElementById("signupBtn").addEventListener("click", () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          feedback.textContent = "✅ Account created. You can now log in.";
+        })
+        .catch((error) => {
+          feedback.textContent = "❌ " + error.message;
+        });
+    });
+  </script>
+</body>
+</html>

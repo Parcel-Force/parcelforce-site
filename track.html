@@ -6,8 +6,8 @@
   <title>Parcel Tracker</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script> <!-- ✅ QR Code Library -->
 
-  <!-- SEO & Social Preview -->
   <meta name="description" content="Track your parcel in real-time with ParcelForce International Courier." />
   <meta property="og:title" content="Parcel Tracker | ParcelForce" />
   <meta property="og:image" content="logo.png.jpg" />
@@ -100,6 +100,11 @@
       margin-top: 20px;
       border-radius: 8px;
     }
+
+    #qrCodeContainer {
+      margin-top: 20px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -147,6 +152,7 @@
     <button class="support-btn" onclick="alert('Redirecting to secure payment portal...')" aria-label="Pay customs fee">Pay Customs Fee</button>
 
     <div id="map"></div>
+    <div id="qrCodeContainer"></div> <!-- ✅ QR Code Display -->
   </div>
 
   <script>
@@ -155,18 +161,24 @@
       info.style.display = document.getElementById('revealInfo').checked ? 'block' : 'none';
     }
 
-    // Initialize map
-    const map = L.map('map').setView([-26.2041, 28.0473], 10);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    // Optional: dynamically load tracking number from URL
     const params = new URLSearchParams(window.location.search);
     const ref = params.get('ref');
     if (ref) {
       document.getElementById('trackingNumber').textContent = `Tracking Number: ${ref}`;
     }
+
+    // Initialize map
+    const map = L.map('map').setView([-26.2041, 28.0473], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    L.marker([-26.2041, 28.0473]).addTo(map);
+
+    // ✅ Generate QR Code
+    const qrTarget = `https://yourdomain.com/track.html?ref=${ref || 'RB123456789CN'}`;
+    QRCode.toCanvas(document.getElementById('qrCodeContainer'), qrTarget, function (error) {
+      if (error) console.error(error);
+    });
   </script>
 
 </body>

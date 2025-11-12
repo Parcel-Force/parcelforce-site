@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Generate Invoice</title>
+  <meta name="description" content="Generate branded ParcelForce invoices with real-time Firebase integration." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="generate.css" />
+
+  <link rel="icon" href="favicon.ico" />
+</head>
+<body>
+  <h1>Generate Invoice</h1>
+  <form id="invoiceForm">
+    <label for="ref">Reference Number</label>
+    <input id="ref" type="text" name="ref" placeholder="Reference Number" required />
+
+    <label for="sender">Sender Name</label>
+    <input id="sender" type="text" name="sender" placeholder="Sender Name" required />
+
+    <label for="recipient">Recipient Name</label>
+    <input id="recipient" type="text" name="recipient" placeholder="Recipient Name" required />
+
+    <label for="item">Item Description</label>
+    <input id="item" type="text" name="item" placeholder="Item Description" required />
+
+    <label for="status">Delivery Status</label>
+    <input id="status" type="text" name="status" placeholder="Delivery Status" required />
+
+    <label for="zone">Delivery Zone</label>
+    <input id="zone" type="text" name="zone" placeholder="Delivery Zone" required />
+
+    <label for="contact">Recipient Contact</label>
+    <input id="contact" type="text" name="contact" placeholder="Recipient Contact" required />
+
+    <label for="notes">Admin Notes (optional)</label>
+    <textarea id="notes" name="notes" placeholder="Admin Notes (optional)"></textarea>
+
+    <button type="submit">Generate</button>
+  </form>
+
+  <script type="module" src="generate.js"></script>
+</body>
+</html>

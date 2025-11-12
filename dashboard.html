@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Parcels | ParcelForce</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <img src="logo.png" alt="ParcelForce Logo" class="dashboard-logo" />
+    <div class="dashboard" role="main" aria-labelledby="dashboardTitle">
+      <h2 id="dashboardTitle">📦 My Parcels</h2>
+      <p id="userEmail"></p>
+      <button onclick="logout()" aria-label="Logout from your account">🚪 Logout</button>
+      <div id="parcelList" aria-live="polite" tabindex="-1">Loading your parcels...</div>
+    </div>
+  </main>
+  <noscript>
+    <div style="color: #c8102e; text-align: center; margin-top: 20px;">
+      JavaScript is required to view your parcels. Please enable JavaScript in your browser.
+    </div>
+  </noscript>
+  <script type="module" src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Parcel Support | ParcelForce</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="support.js"></script>
+  <style>
+    :root {
+      --primary: #c8102e;
+      --accent: #f9f9f9;
+      --text: #2c3e50;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--accent);
+      margin: 0;
+      padding: 40px;
+      color: var(--text);
+    }
+
+    .support-form {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #a50e24;
+    }
+
+    #feedback {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      font-weight: 500;
+    }
+
+    .back-link a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="support-form">
+    <h2>Need Help with Your Parcel?</h2>
+    <form id="supportForm">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="email" id="email" placeholder="Your Email" required />
+      <input type="text" id="tracking" placeholder="Tracking Number" required />
+      <textarea id="message" placeholder="Describe your issue..." rows="5" required></textarea>
+      <button type="submit">📨 Submit Request</button>
+    </form>
+    <p id="feedback"></p>
+    <p style="text-align:center; margin-top:20px;">
+      Or contact us directly on <a href="https://wa.me/27633373857" target="_blank">WhatsApp</a>
+    </p>
+    <div class="back-link">
+      <a href="dashboard.html">← Back to My Parcels</a>
+    </div>
+  </div>
+</body>
+</html>
