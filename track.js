@@ -1,26 +1,48 @@
-// track.js
-import { db } from './firebase.js';
-import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+// track.js (Manual version — no Firebase)
 
 const params = new URLSearchParams(window.location.search);
 const trackingNumber = params.get('ref');
-const parcelRef = ref(db, 'parcels/' + trackingNumber);
 
 document.getElementById('trackingNumber').textContent = `Tracking Number: ${trackingNumber}`;
 
 let map, marker;
 
-onValue(parcelRef, (snapshot) => {
-  if (!snapshot.exists()) {
-    document.getElementById('parcelDetails').innerHTML = `
-      <h2>Parcel Not Found</h2>
-      <p>No parcel found for reference: <strong>${trackingNumber}</strong></p>
-      <button class="support-btn" onclick="window.location.href='index.html'">🔙 Back to Home</button>
-    `;
-    return;
+// Manually defined parcel data
+const parcels = {
+  "PF123456": {
+    sender: "David Callaghan",
+    receiver: "Ellen Tshabalala",
+    address: "210 Magdalena Willers Street, Lilnerpark, Pretoria, 0186",
+    phone: "+27746549272",
+    email: "tellen864@gmail.com",
+    deliveryFee: 2500,
+    estimatedDelivery: "2025-11-13",
+    status: [
+      {
+        status: "Picked Up",
+        location: "London Warehouse",
+        timestamp: "2025-11-11T10:00:00Z"
+      },
+      {
+        status: "In Transit",
+        location: "En route to Pretoria, South Africa",
+        timestamp: "2025-11-12T18:30:00Z",
+        latitude: -25.7461,
+        longitude: 28.1881
+      }
+    ]
   }
+};
 
-  const data = snapshot.val();
+const data = parcels[trackingNumber];
+
+if (!data) {
+  document.getElementById('parcelDetails').innerHTML = `
+    <h2>Parcel Not Found</h2>
+    <p>No parcel found for reference: <strong>${trackingNumber}</strong></p>
+    <button class="support-btn" onclick="window.location.href='index.html'">🔙 Back to Home</button>
+  `;
+} else {
   const latest = data.status[data.status.length - 1];
 
   document.getElementById('lastUpdated').textContent = new Date().toISOString();
@@ -66,7 +88,7 @@ onValue(parcelRef, (snapshot) => {
       map.panTo([latest.latitude, latest.longitude]);
     }
   }
-});
+}
 
 function getProgressWidth(statusArray) {
   if (!Array.isArray(statusArray)) return '0%';
