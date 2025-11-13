@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
-  <script type="module" src="receipt.js"></script>
+  <script src="receipt.js"></script>
 </head>
 <body>
   <div class="invoice">
@@ -15,21 +15,21 @@
     <div class="section">
       <h3>Invoice</h3>
       <div class="field"><span class="label">Invoice No:</span> <span class="field-invoice">INV-12345-1</span></div>
-      <div class="field"><span class="label">Date:</span> <span class="field-date">26 Nov 2025</span></div>
+      <div class="field"><span class="label">Date:</span> <span class="field-date">13 Nov 2025</span></div>
     </div>
 
     <div class="section">
       <h3>Bill To</h3>
-      <div class="field"><span class="label">Name:</span> <span id="recipientName">Ellen Tshabalala</span></div>
-      <div class="field"><span class="label">Contact:</span> <span id="recipientContact">+27 74 654 92 72</span></div>
-      <div class="field"><span class="label">Address:</span> <span id="recipientAddress">210 Magdalena Willers Street, Lilnerpark, Pretoria, 0186</span></div>
+      <div class="field"><span class="label">Name:</span> <span id="recipientName"></span></div>
+      <div class="field"><span class="label">Contact:</span> <span id="recipientContact"></span></div>
+      <div class="field"><span class="label">Address:</span> <span id="recipientAddress"></span></div>
     </div>
 
     <div class="section">
       <h3>From</h3>
-      <div class="field"><span class="label">Name:</span> <span id="senderName">David Callaghan</span></div>
-      <div class="field"><span class="label">Contact:</span> <span id="senderContact">+1 954 264 4309</span></div>
-      <div class="field"><span class="label">Address:</span> <span id="senderAddress">154-Notting Hill Gate, Kensington & Chelsea, London W11 3QG</span></div>
+      <div class="field"><span class="label">Name:</span> <span id="senderName"></span></div>
+      <div class="field"><span class="label">Contact:</span> <span id="senderContact"></span></div>
+      <div class="field"><span class="label">Address:</span> <span id="senderAddress"></span></div>
     </div>
 
     <div class="section">
@@ -43,23 +43,16 @@
             <th>Total</th>
           </tr>
         </thead>
-        <tbody id="itemTableBody">
-          <tr><td>Clothing Dresses</td><td>5</td><td>£250.00</td><td>£1,250.00</td></tr>
-          <tr><td>Apple Macbook Pro</td><td>1</td><td>£2,450.00</td><td>£2,450.00</td></tr>
-          <tr><td>iPhone 16 Pro Max</td><td>1</td><td>£1,650.00</td><td>£1,650.00</td></tr>
-          <tr><td>Brown Envelope</td><td>1</td><td>£5,000.00</td><td>£5,000.00</td></tr>
-          <tr><td>Luxury Footwear</td><td>3</td><td>£1,000.00</td><td>£3,000.00</td></tr>
-          <tr><td>Exclusive Surprise</td><td>1</td><td>£500.00</td><td>£500.00</td></tr>
-        </tbody>
+        <tbody id="itemTableBody"></tbody>
       </table>
     </div>
 
     <div class="section">
       <h3>Summary</h3>
       <table class="summary-table">
-        <tr><td>Sub Total:</td><td id="subtotalAmount">£11,850.00</td></tr>
-        <tr><td>VAT (20%):</td><td id="vatAmount">£2,370.00</td></tr>
-        <tr><td>Total Due:</td><td id="totalAmount">£14,220.00</td></tr>
+        <tr><td>Sub Total:</td><td id="subtotalAmount"></td></tr>
+        <tr><td>VAT (20%):</td><td id="vatAmount"></td></tr>
+        <tr><td>Total Due:</td><td id="totalAmount"></td></tr>
       </table>
     </div>
 
