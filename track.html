@@ -6,7 +6,7 @@
   <title>Parcel Tracker</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script> <!-- ✅ QR Code Library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
 
   <meta name="description" content="Track your parcel in real-time with ParcelForce International Courier." />
   <meta property="og:title" content="Parcel Tracker | ParcelForce" />
@@ -47,7 +47,7 @@
     .progress {
       background-color: #0078D4;
       height: 100%;
-      width: 33%;
+      width: 66%;
       border-radius: 5px;
     }
 
@@ -110,8 +110,8 @@
 <body>
 
   <div class="section" id="parcelDetails">
-    <h2 id="trackingNumber">Tracking Number: RB123456789CN</h2>
-    <p><strong>Last Updated:</strong> <span id="lastUpdated">2025-11-08T14:54:00Z</span></p>
+    <h2 id="trackingNumber">Tracking Number: PF123456</h2>
+    <p><strong>Last Updated:</strong> <span id="lastUpdated">2025-11-13T08:18:00Z</span></p>
 
     <div class="progress-bar">
       <div class="progress"></div>
@@ -119,8 +119,8 @@
 
     <h3>Parcel Journey</h3>
     <div class="progress-container">
-      <div class="progress-step active">📦 Picked Up</div>
-      <div class="progress-step">🚚 In Transit</div>
+      <div class="progress-step">📦 Picked Up</div>
+      <div class="progress-step active">🚚 In Transit</div>
       <div class="progress-step">🏁 Delivered</div>
     </div>
 
@@ -140,7 +140,7 @@
 
     <h3>Status Updates</h3>
     <ul class="status-list">
-      <li><strong>Last Checkpoint:</strong> OR Tambo Airport — Arrived at customs</li>
+      <li><strong>Last Checkpoint:</strong> En route to Pretoria — In Transit</li>
     </ul>
 
     <div class="alert">
@@ -152,7 +152,7 @@
     <button class="support-btn" onclick="alert('Redirecting to secure payment portal...')" aria-label="Pay customs fee">Pay Customs Fee</button>
 
     <div id="map"></div>
-    <div id="qrCodeContainer"></div> <!-- ✅ QR Code Display -->
+    <div id="qrCodeContainer"></div>
   </div>
 
   <script>
@@ -167,15 +167,15 @@
       document.getElementById('trackingNumber').textContent = `Tracking Number: ${ref}`;
     }
 
-    // Initialize map
-    const map = L.map('map').setView([-26.2041, 28.0473], 10);
+    // Initialize map centered on Pretoria
+    const map = L.map('map').setView([-25.7461, 28.1881], 10);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
-    L.marker([-26.2041, 28.0473]).addTo(map);
+    L.marker([-25.7461, 28.1881]).addTo(map);
 
-    // ✅ Generate QR Code
-    const qrTarget = `https://yourdomain.com/track.html?ref=${ref || 'RB123456789CN'}`;
+    // Generate QR Code
+    const qrTarget = `https://yourdomain.com/track.html?ref=${ref || 'PF123456'}`;
     QRCode.toCanvas(document.getElementById('qrCodeContainer'), qrTarget, function (error) {
       if (error) console.error(error);
     });
