@@ -110,7 +110,7 @@
 <body>
 
   <div class="section" id="parcelDetails">
-    <h2 id="trackingNumber">Tracking Number: PF123456</h2>
+    <h2 id="trackingNumber">Tracking Number: RB123456789CN</h2>
     <p><strong>Last Updated:</strong> <span id="lastUpdated">2025-11-13T08:18:00Z</span></p>
 
     <div class="progress-bar">
@@ -128,19 +128,19 @@
       <label><input type="checkbox" id="revealInfo" onchange="toggleInfo()" aria-label="Toggle recipient details" /> Show recipient details</label>
     </div>
     <div id="recipientInfo" style="display: none;">
-      <p><strong>Sender:</strong> David Callaghan</p>
-      <p><strong>Receiver:</strong> Ellen Tshabalala</p>
-      <p><strong>Address:</strong> 210 Magdalena Willers Street, Lilnerpark, Pretoria, 0186</p>
-      <p><strong>Phone:</strong> +27 74 654 92 72</p>
-      <p><strong>Email:</strong> tellen864@gmail.com</p>
+      <p><strong>Sender:</strong> Pascal William</p>
+      <p><strong>Receiver:</strong> Philile Nkumbe</p>
+      <p><strong>Address:</strong> Katlehong Goba section 131</p>
+      <p><strong>Phone:</strong> 0716173903</p>
+      <p><strong>Email:</strong> <!-- optional --></p>
     </div>
 
     <p><strong>Delivery Fee:</strong> R2500</p>
-    <p><strong>Estimated Delivery:</strong> 2025-11-13</p>
+    <p><strong>Estimated Delivery:</strong> 2025-11-14</p>
 
     <h3>Status Updates</h3>
     <ul class="status-list">
-      <li><strong>Last Checkpoint:</strong> En route to Pretoria — In Transit</li>
+      <li><strong>Last Checkpoint:</strong> Johannesburg OR Tambo Airport — In Transit</li>
     </ul>
 
     <div class="alert">
@@ -167,15 +167,15 @@
       document.getElementById('trackingNumber').textContent = `Tracking Number: ${ref}`;
     }
 
-    // Initialize map centered on Pretoria
-    const map = L.map('map').setView([-25.7461, 28.1881], 10);
+    // Initialize map centered on Johannesburg OR Tambo Airport
+    const map = L.map('map').setView([-26.1392, 28.2460], 10);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
-    L.marker([-25.7461, 28.1881]).addTo(map);
+    L.marker([-26.1392, 28.2460]).addTo(map);
 
     // Generate QR Code
-    const qrTarget = `https://yourdomain.com/track.html?ref=${ref || 'PF123456'}`;
+    const qrTarget = `https://yourdomain.com/track.html?ref=${ref || 'RB123456789CN'}`;
     QRCode.toCanvas(document.getElementById('qrCodeContainer'), qrTarget, function (error) {
       if (error) console.error(error);
     });
