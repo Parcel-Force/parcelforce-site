@@ -47,8 +47,9 @@
     .progress {
       background-color: #0078D4;
       height: 100%;
-      width: 66%;
+      width: 33%;
       border-radius: 5px;
+      transition: width 0.5s ease;
     }
 
     .progress-container {
@@ -111,17 +112,17 @@
 
   <div class="section" id="parcelDetails">
     <h2 id="trackingNumber">Tracking Number: RB123456789CN</h2>
-    <p><strong>Last Updated:</strong> <span id="lastUpdated">2025-11-13T08:18:00Z</span></p>
+    <p><strong>Last Updated:</strong> <span id="lastUpdated">2025-11-24T08:18:00Z</span></p>
 
     <div class="progress-bar">
-      <div class="progress"></div>
+      <div class="progress" id="progressFill"></div>
     </div>
 
     <h3>Parcel Journey</h3>
     <div class="progress-container">
-      <div class="progress-step">📦 Picked Up</div>
-      <div class="progress-step active">🚚 In Transit</div>
-      <div class="progress-step">🏁 Delivered</div>
+      <div class="progress-step" id="step1">📦 Picked Up (UK — 22/11/2025)</div>
+      <div class="progress-step" id="step2">🚚 Arrived in South Africa — 24/11/2025</div>
+      <div class="progress-step" id="step3">🏁 Delivered (Expected 25/11/2025)</div>
     </div>
 
     <div class="privacy-toggle">
@@ -138,11 +139,11 @@
       <p><strong>Email:</strong> doreenm@vdt.co.za</p>
     </div>
 
-    <p><strong>Estimated Delivery:</strong> 2025-11-14</p>
+    <p><strong>Estimated Delivery:</strong> 2025-11-25</p>
 
     <h3>Status Updates</h3>
     <ul class="status-list">
-      <li><strong>Last Checkpoint:</strong> Johannesburg OR Tambo Airport — In Transit</li>
+      <li><strong>Last Checkpoint:</strong> Johannesburg OR Tambo Airport — Arrived 24/11/2025</li>
     </ul>
 
     <div class="alert">
@@ -168,6 +169,24 @@
     if (ref) {
       document.getElementById('trackingNumber').textContent = `Tracking Number: ${ref}`;
     }
+
+    // Progress bar logic based on date
+    const today = new Date("2025-11-24"); // simulate current date
+    const step1Date = new Date("2025-11-22");
+    const step2Date = new Date("2025-11-24");
+    const step3Date = new Date("2025-11-25");
+
+    let progressWidth = 33;
+    if (today >= step2Date && today < step3Date) {
+      progressWidth = 66;
+      document.getElementById("step2").classList.add("active");
+    } else if (today >= step3Date) {
+      progressWidth = 100;
+      document.getElementById("step3").classList.add("active");
+    } else {
+      document.getElementById("step1").classList.add("active");
+    }
+    document.getElementById("progressFill").style.width = progressWidth + "%";
 
     // Initialize map centered on Johannesburg OR Tambo Airport
     const map = L.map('map').setView([-26.1392, 28.2460], 10);
