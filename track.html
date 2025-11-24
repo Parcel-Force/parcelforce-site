@@ -2,184 +2,156 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parcel Tracker</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script> <!-- ✅ QR Code Library -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ParcelForce | Live Tracker</title>
 
-  <meta name="description" content="Track your parcel in real-time with ParcelForce International Courier." />
-  <meta property="og:title" content="Parcel Tracker | ParcelForce" />
-  <meta property="og:image" content="logo.png.jpg" />
+  <!-- Leaflet CSS/JS (versioned, reliable) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- QRCode -->
+  <script defer src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
 
   <style>
+    :root {
+      --primary: #c8102e;
+      --bg: #f4f6fb;
+      --text: #2c3e50;
+      --card: #fff;
+    }
     body {
       font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      margin: 0;
       padding: 20px;
-      background: #f9f9f9;
-      color: #2c3e50;
+      color: var(--text);
     }
-
     .section {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-      max-width: 600px;
-      margin: 0 auto 40px;
+      background: var(--card);
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 900px;
+      margin: 20px auto;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
     }
+    h2 { text-align: center; color: var(--primary); }
+    h3 { margin-top: 24px; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 8px; }
+    p strong { color: var(--primary); }
 
-    h2, h3 {
-      color: #2c3e50;
-    }
+    .progress-bar { background: #e0e0e0; border-radius: 20px; height: 20px; margin: 16px 0; overflow: hidden; }
+    .progress { background: linear-gradient(90deg, var(--primary), #ff4d6d); height: 100%; width: 66%; transition: width 0.6s ease; border-radius: 20px; }
 
-    .status-list li {
-      margin-bottom: 10px;
-    }
+    .progress-container { display: flex; gap: 12px; margin: 16px 0; }
+    .progress-step { flex: 1; text-align: center; font-weight: 600; color: #777; }
+    .progress-step.active { color: var(--primary); transform: scale(1.02); }
 
-    .progress-bar {
-      background-color: #eee;
-      border-radius: 5px;
-      height: 10px;
-      margin: 10px 0;
-    }
+    .status-list { list-style: none; padding: 0; }
+    .status-list li { background: #f9f9f9; padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary); margin: 10px 0; }
 
-    .progress {
-      background-color: #0078D4;
-      height: 100%;
-      width: 33%;
-      border-radius: 5px;
-    }
+    .privacy-toggle { text-align: center; margin: 16px 0; }
+    #recipientInfo { display: none; background: #f9f9f9; padding: 12px; border-radius: 8px; }
 
-    .progress-container {
-      display: flex;
-      justify-content: space-between;
-      margin: 20px 0;
-    }
+    .alert { background: #fff3cd; color: #856404; padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary); text-align: center; }
 
-    .progress-step {
-      flex: 1;
-      text-align: center;
-      padding: 10px;
-      border-bottom: 4px solid #ccc;
-    }
+    .support-btn { background: var(--primary); color: #fff; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; margin: 6px 4px; font-weight: 600; }
+    .support-btn:hover { background: #a00d26; }
 
-    .progress-step.active {
-      border-color: #52c41a;
-      font-weight: bold;
-    }
+    /* Critical: map must have a fixed height */
+    #map { height: 350px; border-radius: 12px; margin-top: 12px; }
 
-    .privacy-toggle {
-      margin: 20px 0;
-    }
-
-    .support-btn {
-      margin: 10px 5px;
-      padding: 10px 15px;
-      background-color: #0078D4;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .support-btn:hover {
-      background-color: #005a9e;
-    }
-
-    .alert {
-      background-color: #fff3cd;
-      color: #856404;
-      padding: 10px;
-      border-radius: 6px;
-      margin-top: 20px;
-    }
-
-    #map {
-      height: 300px;
-      margin-top: 20px;
-      border-radius: 8px;
-    }
-
-    #qrCodeContainer {
-      margin-top: 20px;
-      text-align: center;
-    }
+    #qrCodeContainer { text-align: center; margin-top: 16px; }
   </style>
 </head>
 <body>
+  <div class="section">
+    <h2 id="trackingNumber">📦 Tracking Number: RB123456789CN</h2>
+    <p><strong>Last Updated:</strong> <span id="lastUpdated">2025-11-24 08:18</span></p>
 
-  <div class="section" id="parcelDetails">
-    <h2 id="trackingNumber">Tracking Number: RB123456789CN</h2>
-    <p><strong>Last Updated:</strong> <span id="lastUpdated">2025-11-08T14:54:00Z</span></p>
+    <div class="progress-bar"><div class="progress" id="progressFill"></div></div>
 
-    <div class="progress-bar">
-      <div class="progress"></div>
-    </div>
-
-    <h3>Parcel Journey</h3>
+    <h3>Parcel journey</h3>
     <div class="progress-container">
-      <div class="progress-step active">📦 Picked Up</div>
-      <div class="progress-step">🚚 In Transit</div>
-      <div class="progress-step">🏁 Delivered</div>
+      <div class="progress-step" id="step1">Picked Up (UK — 22/11/2025)</div>
+      <div class="progress-step" id="step2">Arrived in South Africa — 24/11/2025</div>
+      <div class="progress-step" id="step3">Delivered (Expected 25/11/2025)</div>
     </div>
 
     <div class="privacy-toggle">
-      <label><input type="checkbox" id="revealInfo" onchange="toggleInfo()" aria-label="Toggle recipient details" /> Show recipient details</label>
+      <label><input type="checkbox" id="revealInfo" /> Show recipient details</label>
     </div>
-    <div id="recipientInfo" style="display: none;">
-      <p><strong>Sender:</strong> David Callaghan</p>
-      <p><strong>Receiver:</strong> Ellen Tshabalala</p>
-      <p><strong>Address:</strong> 210 Magdalena Willers Street, Lilnerpark, Pretoria, 0186</p>
-      <p><strong>Phone:</strong> +27 74 654 92 72</p>
-      <p><strong>Email:</strong> tellen864@gmail.com</p>
+    <div id="recipientInfo">
+      <p><strong>Sender:</strong> Williams Andrew</p>
+      <p><strong>Phone:</strong> +44 7349 554526</p>
+      <p><strong>Receiver:</strong> Doreen Debra van der Merwe</p>
+      <p><strong>Address:</strong> Castle Gate Office Block, VDT Attorneys, Pretoria</p>
+      <p><strong>Phone:</strong> 0611470840</p>
+      <p><strong>Email:</strong> doreenm@vdt.co.za</p>
     </div>
 
-    <p><strong>Delivery Fee:</strong> R2500</p>
-    <p><strong>Estimated Delivery:</strong> 2025-11-13</p>
+    <p><strong>Estimated Delivery:</strong> 2025-11-25</p>
 
-    <h3>Status Updates</h3>
+    <h3>Status updates</h3>
     <ul class="status-list">
-      <li><strong>Last Checkpoint:</strong> OR Tambo Airport — Arrived at customs</li>
+      <li><strong>Last Checkpoint:</strong> Johannesburg OR Tambo Airport — Arrived 24/11/2025</li>
     </ul>
 
-    <div class="alert">
-      ⚠ Customs and delivery fee of <strong>R2500</strong> must be paid before parcel can proceed for Delivery
-    </div>
+    <div class="alert">⚠ Customs and delivery fee must be paid before parcel can proceed for Delivery</div>
 
-    <button class="support-btn" onclick="window.location.href='index.html'" aria-label="Back to home">🔙 Back to Home</button>
-    <button class="support-btn" onclick="window.open('https://wa.me/27633373857', '_blank')" aria-label="Contact WhatsApp support">WhatsApp Support</button>
-    <button class="support-btn" onclick="alert('Redirecting to secure payment portal...')" aria-label="Pay customs fee">Pay Customs Fee</button>
+    <button class="support-btn" onclick="window.location.href='index.html'">🔙 Back to Home</button>
+    <button class="support-btn" onclick="window.open('https://wa.me/27633373857', '_blank')">WhatsApp Support</button>
+    <button class="support-btn" onclick="alert('Redirecting to secure payment portal...')">Pay Customs Fee</button>
 
+    <h3>Live map</h3>
     <div id="map"></div>
-    <div id="qrCodeContainer"></div> <!-- ✅ QR Code Display -->
+
+    <h3>QR code</h3>
+    <div id="qrCodeContainer"></div>
   </div>
 
   <script>
-    function toggleInfo() {
+    // Make sure DOM is ready before running
+    window.addEventListener('DOMContentLoaded', () => {
+      // Toggle recipient details
+      const toggle = document.getElementById('revealInfo');
       const info = document.getElementById('recipientInfo');
-      info.style.display = document.getElementById('revealInfo').checked ? 'block' : 'none';
-    }
+      toggle.addEventListener('change', () => {
+        info.style.display = toggle.checked ? 'block' : 'none';
+      });
 
-    const params = new URLSearchParams(window.location.search);
-    const ref = params.get('ref');
-    if (ref) {
-      document.getElementById('trackingNumber').textContent = `Tracking Number: ${ref}`;
-    }
+      // Progress bar example
+      const today = new Date("2025-11-24");
+      const step1Date = new Date("2025-11-22");
+      const step2Date = new Date("2025-11-24");
+      const step3Date = new Date("2025-11-25");
+      let width = 33;
+      if (today >= step2Date && today < step3Date) {
+        width = 66;
+        document.getElementById('step2').classList.add('active');
+      } else if (today >= step3Date) {
+        width = 100;
+        document.getElementById('step3').classList.add('active');
+      } else {
+        document.getElementById('step1').classList.add('active');
+      }
+      document.getElementById('progressFill').style.width = width + '%';
 
-    // Initialize map
-    const map = L.map('map').setView([-26.2041, 28.0473], 10);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    L.marker([-26.2041, 28.0473]).addTo(map);
+      // Initialize Leaflet map (Johannesburg OR Tambo)
+      const map = L.map('map').setView([-26.1392, 28.2460], 10);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+      L.marker([-26.1392, 28.2460]).addTo(map);
 
-    // ✅ Generate QR Code
-    const qrTarget = `https://yourdomain.com/track.html?ref=${ref || 'RB123456789CN'}`;
-    QRCode.toCanvas(document.getElementById('qrCodeContainer'), qrTarget, function (error) {
-      if (error) console.error(error);
+      // QR code render: create a canvas and append
+      const params = new URLSearchParams(window.location.search);
+      const ref = params.get('ref') || 'RB123456789CN';
+      const url = `https://parcel-force.github.io/parcelforce-site/track.html?ref=${ref}`;
+      const canvas = document.createElement('canvas');
+      QRCode.toCanvas(canvas, url, (err) => {
+        if (err) console.error(err);
+        document.getElementById('qrCodeContainer').appendChild(canvas);
+      });
     });
   </script>
-
 </body>
 </html>
