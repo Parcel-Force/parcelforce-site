@@ -109,7 +109,7 @@
           lastUpdated: "2025-11-24 09:45",
           steps: [
             "Picked Up (UK — 23/11/2025)",
-            "Arrived in London — 24/11/2025",
+            "Arrived in London — 24/11/2025)",
             "Delivered (Expected 26/11/2025)"
           ],
           checkpoint: "Heathrow Airport — Arrived 24/11/2025",
@@ -143,4 +143,11 @@
         <p><strong>Phone:</strong> ${parcel.sender.phone}</p>
         <p><strong>Receiver:</strong> ${parcel.recipient.name}</p>
         <p><strong>Address:</strong> ${parcel.recipient.address}</p>
-        <
+        <p><strong>Phone:</strong> ${parcel.recipient.phone}</p>
+      `;
+      document.getElementById("deliveryDate").textContent = parcel.deliveryDate;
+      document.getElementById("alertBox").textContent = parcel.alert;
+
+      // Progress bar logic
+      const today = new Date("2025-11-24");
+      const step1Date = new Date(parcel.steps[
