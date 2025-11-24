@@ -6,6 +6,9 @@
   <title>ParcelForce | Track. Deliver. Impress.</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <style>
+    /* Your styles here */
+
+
     :root {
       --red: #c8102e;
       --dark: #1f1f1f;
@@ -392,6 +395,9 @@
         font-size: 2em;
       }
     }
+  
+
+
   </style>
 </head>
 <body>
@@ -480,27 +486,9 @@
     <p>Privacy | Terms | Accessibility</p>
   </footer>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
-    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBqymK8EWPa9s7c_2uTUXzBONK3XfTipFU",
-      authDomain: "parcelforcetracker.firebaseapp.com",
-      databaseURL: "https://parcelforcetracker-default-rtdb.firebaseio.com",
-      projectId: "parcelforcetracker",
-      storageBucket: "parcelforcetracker.appspot.com",
-      messagingSenderId: "408904759435",
-      appId: "1:408904759435:web:eba15d67580426198bbc8e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-
-    // Track Item Function
-    window.trackItem = async function () {
+  <script>
+    // Track Item Function (local, no Firebase)
+    function trackItem() {
       const input = document.getElementById('trackingInput');
       const value = input.value.trim().toUpperCase();
       const pattern = /^[A-Z0-9]{9,21}$/;
@@ -518,26 +506,15 @@
       button.disabled = true;
       button.textContent = "Checking...";
 
-      try {
-        const snapshot = await get(child(ref(db), `invoices/${value}`));
-        if (snapshot.exists()) {
-          window.location.href = `track.html?ref=${encodeURIComponent(value)}`;
-        } else {
-          alert("Tracking number not found. Please check and try again.");
-        }
-      } catch (error) {
-        console.error("Firebase error:", error);
-        alert("Error checking tracking number. Try again later.");
-      } finally {
-        spinner.style.display = "none";
-        button.disabled = false;
-        button.textContent = "Track Now";
-      }
-    };
+      // Redirect directly to track.html with ?ref=...
+      setTimeout(() => {
+        window.location.href = `track.html?ref=${encodeURIComponent(value)}`;
+      }, 800); // small delay for spinner effect
+    }
 
-    // Create Account Function
+    // Create Account Function (local demo)
     const createBtn = document.getElementById('createAccountBtn');
-    createBtn.addEventListener('click', async () => {
+    createBtn.addEventListener('click', () => {
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const username = document.getElementById('username').value.trim();
@@ -552,27 +529,20 @@
         return;
       }
 
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        alert("Account created successfully! Welcome, " + username + "!");
-        // Clear form
-        document.getElementById('username').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('password').value = '';
-      } catch (error) {
-        console.error("Error creating account:", error);
-        alert("Error: " + error.message);
-      }
+      alert("Account created successfully! Welcome, " + username + "!");
+      // Clear form
+      document.getElementById('username').value = '';
+      document.getElementById('email').value = '';
+      document.getElementById('password').value = '';
     });
 
     // Dark Mode Toggle
-    window.toggleDarkMode = function() {
+    function toggleDarkMode() {
       document.body.classList.toggle('dark-mode');
       const icon = document.getElementById('modeIcon');
       icon.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-      // Save preference
       localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-    };
+    }
 
     // Load dark mode preference
     if (localStorage.getItem('darkMode') === 'true') {
