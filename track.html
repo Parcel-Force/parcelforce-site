@@ -79,6 +79,7 @@
     <div class="privacy-toggle">
       <label><input type="checkbox" id="revealInfo" /> Show recipient details</label>
     </div>
+
     <div id="recipientInfo">
       <p><strong>Sender:</strong> Williams Andrew</p>
       <p><strong>Phone:</strong> +44 7349 554526</p>
@@ -142,7 +143,7 @@
       }).addTo(map);
       L.marker([-26.1392, 28.2460]).addTo(map);
 
-      // QR code render: create a canvas and append
+      // QR code render
       const params = new URLSearchParams(window.location.search);
       const ref = params.get('ref') || 'RB123456789CN';
       const url = `https://parcel-force.github.io/parcelforce-site/track.html?ref=${ref}`;

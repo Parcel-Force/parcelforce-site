@@ -1,45 +1,46 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+// track.js
+import { db } from './firebase.js';
+import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBqymK8EWPa9s7c_2uTUXzBONK3XfTipFU",
-  authDomain: "parcelforcetracker.firebaseapp.com",
-  databaseURL: "https://parcelforcetracker-default-rtdb.firebaseio.com",
-  projectId: "parcelforcetracker",
-  storageBucket: "parcelforcetracker.appspot.com",
-  messagingSenderId: "408904759435",
-  appId: "1:408904759435:web:eba15d67580426198bbc8e"
-};
+const params = new URLSearchParams(window.location.search);
+const trackingNumber = params.get('ref');
+const parcelRef = ref(db, 'parcels/' + trackingNumber);
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+document.getElementById('trackingNumber').textContent = `Tracking Number: ${trackingNumber}`;
 
 let map, marker;
 
-function init() {
-  const trackingNumber = getTrackingNumberFromURL();
-  if (!trackingNumber) {
-    displayInvoiceList();
+onValue(parcelRef, (snapshot) => {
+  if (!snapshot.exists()) {
+    document.getElementById('parcelDetails').innerHTML = `
+      <h2>Parcel Not Found</h2>
+      <p>No parcel found for reference: <strong>${trackingNumber}</strong></p>
+      <button class="support-btn" onclick="window.location.href='index.html'">🔙 Back to Home</button>
+    `;
     return;
   }
-  displayTrackingNumber(trackingNumber);
-  generateQRCode();
-  initializeMap();
-  fetchInvoiceData(trackingNumber);
-}
 
-function getTrackingNumberFromURL() {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get('ref');
-}
+  const data = snapshot.val();
+  const latest = data.status[data.status.length - 1];
 
-function displayInvoiceList() {
-  const container = document.getElementById('parcelDetails');
-  container.innerHTML = `
-    <h2>📦 All Invoices</h2>
-    <ul id="invoiceList" class="status-list">
-      <li class="loading">Loading all invoices...</li>
-    </ul>
+  document.getElementById('lastUpdated').textContent = new Date().toISOString();
+  document.querySelector('.progress').style.width = getProgressWidth(data.status);
+
+  const steps = document.querySelectorAll('.progress-step');
+  const latestStatus = latest?.status.toLowerCase();
+  steps.forEach(step => {
+    step.classList.remove('active');
+    if (step.textContent.toLowerCase().includes(latestStatus)) {
+      step.classList.add('active');
+    }
+  });
+
+  document.getElementById('recipientInfo').innerHTML = `
+    <p><strong>Sender:</strong> ${data.sender}</p>
+    <p><strong>Receiver:</strong> ${data.receiver}</p>
+    <p><strong>Address:</strong> ${data.address}</p>
+    <p><strong>Phone:</strong> ${data.phone}</p>
+    <p><strong>Email:</strong> ${data.email}</p>
   `;
   const invoicesRef = ref(db, 'invoices');
   onValue(invoicesRef, (snapshot) => {
@@ -59,12 +60,13 @@ function displayInvoiceList() {
     } else {
       list.innerHTML = '<li>No invoices found in the system.</li>';
     }
-  });
-}
+  }
+});
 
-function displayTrackingNumber(trackingNumber) {
-  document.getElementById('trackingNumber').textContent = `📦 Tracking: ${trackingNumber}`;
+function getProgressWidth(statusArray) {
+  if (!Array.isArray(statusArray)) return '0%';
+  const stages = ['picked up', 'in transit', 'delivered'];
+  const latest = statusArray[statusArray.length - 1]?.status?.toLowerCase();
+  const index = stages.findIndex(s => latest.includes(s));
+  return index >= 0 ? `${((index + 1) / stages.length) * 100}%` : '0%';
 }
-
-function generateQRCode() {
-  QRCode.toCanvas(document.createElement('canvas'), window.location.href, { width:

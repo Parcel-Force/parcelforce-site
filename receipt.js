@@ -1,93 +1,62 @@
-// receipt.js
-import { db } from "./firebase.js";
-import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+// receipt.js — Manual version, no Firebase
 
-// Escape HTML
-function escapeHtml(text) {
-  if (!text) return "N/A";
-  const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
-  return String(text).replace(/[&<>"']/g, (char) => map[char]);
-}
+const refNum = new URLSearchParams(window.location.search).get("ref") || "PF123456";
 
-// Format currency
-function formatCurrency(amount) {
-  const num = parseFloat(amount);
-  return isNaN(num) ? "£0.00" : `£${num.toFixed(2)}`;
-}
+// Static parcel data
+const invoiceData = {
+  invoice: refNum,
+  date: "13 Nov 2025",
+  recipient: "Ellen Tshabalala",
+  contact: "+27 74 654 92 72",
+  recipientAddress: "210 Magdalena Willers Street, Lilnerpark, Pretoria, 0186",
+  sender: "David Callaghan",
+  senderContact: "+1 954 264 4309",
+  senderAddress: "154-Notting Hill Gate, Kensington & Chelsea, London W11 3QG",
+  items: [
+    { description: "Clothing Dresses", quantity: 5, price: 250 },
+    { description: "Apple Macbook Pro", quantity: 1, price: 2450 },
+    { description: "iPhone 16 Pro Max", quantity: 1, price: 1650 },
+    { description: "Brown Envelope", quantity: 1, price: 5000 },
+    { description: "Luxury Footwear", quantity: 3, price: 1000 },
+    { description: "Exclusive Surprise", quantity: 1, price: 500 }
+  ]
+};
 
-// Format date/time
-function formatDate(timestamp) {
-  const date = new Date(timestamp);
-  return isNaN(date.getTime()) ? "N/A" : date.toLocaleDateString("en-GB");
-}
-function formatTime(timestamp) {
-  const date = new Date(timestamp);
-  return isNaN(date.getTime()) ? "--:--" : date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-}
+// Populate fields
+document.querySelector(".field-invoice").textContent = invoiceData.invoice;
+document.querySelector(".field-date").textContent = invoiceData.date;
+document.getElementById("recipientName").textContent = invoiceData.recipient;
+document.getElementById("recipientContact").textContent = invoiceData.contact;
+document.getElementById("recipientAddress").textContent = invoiceData.recipientAddress;
+document.getElementById("senderName").textContent = invoiceData.sender;
+document.getElementById("senderContact").textContent = invoiceData.senderContact;
+document.getElementById("senderAddress").textContent = invoiceData.senderAddress;
 
-// Populate invoice
-function populateInvoice(data, refNum) {
-  // Invoice details
-  document.querySelector(".field-invoice").textContent = refNum;
-  document.querySelector(".field-date").textContent = formatDate(data.createdAt || Date.now());
-  document.getElementById("timestamp").textContent = formatTime(data.createdAt || Date.now());
-
-  // Recipient
-  document.getElementById("recipientName").textContent = escapeHtml(data.recipientName);
-  document.getElementById("recipientContact").textContent = escapeHtml(data.recipientContact);
-  document.getElementById("recipientAddress").textContent = escapeHtml(data.zone);
-
-  // Sender
-  document.getElementById("senderName").textContent = escapeHtml(data.senderName);
-  document.getElementById("senderContact").textContent = escapeHtml(data.senderContact);
-  document.getElementById("senderAddress").textContent = escapeHtml(data.senderEmail);
-
-  // Items
-  const tbody = document.getElementById("itemTableBody");
-  tbody.innerHTML = "";
-  const total = (data.itemQty || 0) * (data.itemPrice || 0);
+// Items
+const itemTableBody = document.getElementById("itemTableBody");
+let subtotal = 0;
+invoiceData.items.forEach(item => {
   const row = document.createElement("tr");
+  const total = item.quantity * item.price;
+  subtotal += total;
   row.innerHTML = `
-    <td>${escapeHtml(data.itemDescription)}</td>
-    <td>${data.itemQty || 0}</td>
-    <td>£${(data.itemPrice || 0).toFixed(2)}</td>
+    <td>${item.description}</td>
+    <td>${item.quantity}</td>
+    <td>£${item.price.toFixed(2)}</td>
     <td>£${total.toFixed(2)}</td>
   `;
-  tbody.appendChild(row);
+  itemTableBody.appendChild(row);
+});
 
-  // Summary
-  document.getElementById("subtotalAmount").textContent = data.subtotal || "£0.00";
-  document.getElementById("vatAmount").textContent = data.vat || "£0.00";
-  document.getElementById("totalAmount").textContent = data.total || "£0.00";
+// Summary
+const vat = subtotal * 0.20;
+const total = subtotal + vat;
+document.getElementById("subtotalAmount").textContent = `£${subtotal.toFixed(2)}`;
+document.getElementById("vatAmount").textContent = `£${vat.toFixed(2)}`;
+document.getElementById("totalAmount").textContent = `£${total.toFixed(2)}`;
 
-  // QR Code
-  const trackingUrl = `${window.location.origin}/track.html?ref=${encodeURIComponent(refNum)}`;
-  QRCode.toCanvas(document.getElementById("qrCodeCanvas"), trackingUrl, { width: 128 }, (error) => {
-    if (error) console.error(error);
-  });
-}
-
-// Get invoice ID from URL
-const params = new URLSearchParams(window.location.search);
-const invoiceId = params.get("id");
-
-if (!invoiceId) {
-  console.error("No invoice ID provided in URL");
-} else {
-  const invoiceRef = ref(db, `invoices/${invoiceId}`);
-  onValue(invoiceRef, (snapshot) => {
-    if (!snapshot.exists()) {
-      console.error("Invoice not found");
-      return;
-    }
-    populateInvoice(snapshot.val(), invoiceId);
-  });
-}
-
-// Print shortcut
-document.addEventListener("keydown", (e) => {
-  if ((e.ctrlKey || e.metaKey) && e.key === "p") {
-    e.preventDefault();
-    window.print();
-  }
+// QR Code
+const qrTarget = `https://parcel-force.github.io/parcelforce-site/track.html?ref=${refNum}`;
+QRCode.toCanvas(document.getElementById("qrCodeCanvas"), qrTarget, { width: 128 }, function (error) {
+  if (error) console.error(error);
 });
