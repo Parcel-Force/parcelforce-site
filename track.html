@@ -6,7 +6,7 @@
   <title>ParcelForce | Live Tracker</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
-  <!-- Leaflet CSS (kept in head so map styles are available) -->
+  <!-- Leaflet CSS/JS (versioned, reliable) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
@@ -28,280 +28,62 @@
       --container: 1200px;
       --shadow-lg: 0 12px 40px rgba(2,6,23,0.12);
     }
-
-    /* Reset + base */
-    *{ box-sizing: border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      font-family: Inter, "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
-      background: linear-gradient(180deg,#ffffff,#f3f6fb 40%);
-      color: #0f1724;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      line-height:1.45;
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      margin: 0;
+      padding: 20px;
+      color: var(--text);
     }
-
-    /* Page container */
-    .wrap{
-      width: min(96%, var(--container));
+    .section {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 900px;
       margin: 20px auto;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      padding-bottom: 48px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
     }
+    h2 { text-align: center; color: var(--primary); }
+    h3 { margin-top: 24px; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 8px; }
+    p strong { color: var(--primary); }
 
-    /* Header / breadcrumb */
-    header.track-header{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      justify-content:space-between;
-      background: var(--card);
-      padding:12px 16px;
-      border-radius: 14px;
-      box-shadow: var(--shadow-lg);
-      border-left: 4px solid var(--brand-red);
-    }
-    .brand {
-      display:flex;
-      gap:12px;
-      align-items:center;
-    }
-    .brand img{ height:40px; width:auto; border-radius:8px; }
-    .brand h1{ font-size:1rem; margin:0; font-weight:700; color:var(--brand-navy); }
-    .breadcrumbs{ font-size:0.9rem; color:var(--muted); }
-    .actions{ display:flex; gap:8px; align-items:center; }
+    .progress-bar { background: #e0e0e0; border-radius: 20px; height: 20px; margin: 16px 0; overflow: hidden; }
+    .progress { background: linear-gradient(90deg, var(--primary), #ff4d6d); height: 100%; width: 66%; transition: width 0.6s ease; border-radius: 20px; }
 
-    .btn {
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      font-weight:600;
-      font-size:0.95rem;
-      border-radius:10px;
-      cursor:pointer;
-      border: none;
-    }
-    .btn-ghost{ background:transparent; color:var(--brand-navy); border:1px solid rgba(11,61,145,0.06); }
-    .btn-primary{ background: linear-gradient(90deg,var(--brand-red),var(--brand-red-2)); color:#fff; box-shadow: 0 8px 24px rgba(155,15,34,0.12); }
+    .progress-container { display: flex; gap: 12px; margin: 16px 0; }
+    .progress-step { flex: 1; text-align: center; font-weight: 600; color: #777; }
+    .progress-step.active { color: var(--primary); transform: scale(1.02); }
 
-    /* Main layout: map + details stacked on mobile, side-by-side on tablet+ */
-    main{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:18px;
-    }
+    .status-list { list-style: none; padding: 0; }
+    .status-list li { background: #f9f9f9; padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary); margin: 10px 0; }
 
-    .card{
-      background: var(--card);
-      padding:16px;
-      border-radius: 14px;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid rgba(15,23,36,0.04);
-    }
+    .privacy-toggle { text-align: center; margin: 16px 0; }
+    #recipientInfo { display: none; background: #f9f9f9; padding: 12px; border-radius: 8px; }
 
-    /* Top summary */
-    .summary {
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-    .summary .meta {
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .tracking {
-      display:flex;
-      gap:12px;
-      align-items:center;
-      min-width:0;
-    }
-    .tracking .code{
-      font-weight:800;
-      color:var(--brand-red);
-      font-size:1.15rem;
-      background: linear-gradient(90deg, rgba(155,15,34,0.06), transparent);
-      padding:8px 12px;
-      border-radius: 10px;
-    }
-    .tracking .copy {
-      background: transparent;
-      border: 1px solid rgba(15,23,36,0.06);
-      padding:8px;
-      border-radius:8px;
-      font-weight:700;
-      cursor:pointer;
-    }
-    .meta .updated { color:var(--muted); font-size:0.95rem; }
+    .alert { background: #fff3cd; color: #856404; padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary); text-align: center; }
 
-    /* Progress / timeline */
-    .progress-row{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .progress-bar{
-      background:#eef2f6;
-      height:14px;
-      border-radius:999px;
-      overflow:hidden;
-    }
-    .progress-fill{
-      height:100%;
-      background: linear-gradient(90deg,var(--brand-red),var(--brand-red-2));
-      width:0%;
-      transition: width .6s cubic-bezier(.2,.9,.2,1);
-      box-shadow: 0 6px 24px rgba(155,15,34,0.08);
-    }
+    .support-btn { background: var(--primary); color: #fff; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; margin: 6px 4px; font-weight: 600; }
+    .support-btn:hover { background: #a00d26; }
 
-    .timeline{
-      display:flex;
-      gap:8px;
-      justify-content:space-between;
-      align-items:center;
-      font-size:0.9rem;
-      color:var(--muted);
-      margin-top:6px;
-    }
-    .timeline .step{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:6px;
-      flex:1;
-      text-align:center;
-    }
-    .timeline .dot{
-      width:14px; height:14px; border-radius:50%;
-      background:#e6eefc; border:3px solid rgba(11,61,145,0.08);
-    }
-    .timeline .dot.active{
-      background:var(--brand-red);
-      box-shadow:0 6px 20px rgba(155,15,34,0.12);
-      border-color:transparent;
-    }
+    /* Critical: map must have a fixed height */
+    #map { height: 350px; border-radius: 12px; margin-top: 12px; }
 
-    /* Map area */
-    .map-wrap{
-      min-height:240px;
-      border-radius:12px;
-      overflow:hidden;
-      position:relative;
-    }
-    #map{
-      width:100%;
-      height:100%;
-      min-height:260px;
-      display:block;
-    }
-    .map-fallback{
-      display:none;
-      padding:24px;
-      text-align:center;
-      color:var(--muted);
-    }
-
-    /* Right column — details */
-    .details{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-    .recipient, .status, .qr-area{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-    .recipient .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    .recipient .label{ color:var(--muted); font-weight:700; width:110px; }
-    .status-list{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px; }
-
-    .status-item{
-      background:#fbfdff;
-      border-radius:10px;
-      padding:10px;
-      border-left: 4px solid var(--brand-red);
-      font-weight:600;
-    }
-
-    /* QR */
-    .qr-canvas{ display:flex; justify-content:center; align-items:center; padding:16px; }
-
-    /* Utility footer */
-    footer.track-footer{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      justify-content:space-between;
-      padding:12px 16px;
-      background:transparent;
-      color:var(--muted);
-      font-size:0.95rem;
-    }
-
-    /* small screens tweaks */
-    @media (min-width: 880px){
-      .wrap{ gap:20px; }
-      main{
-        grid-template-columns: 1fr 360px; /* map/details columns */
-        align-items:start;
-      }
-      .summary{ flex-direction:row; align-items:center; justify-content:space-between; }
-      .map-wrap{ min-height:420px; }
-    }
-
-    /* Focus outlines for accessibility */
-    a:focus, button:focus, input:focus {
-      outline: 3px solid rgba(11,61,145,0.12);
-      outline-offset: 2px;
-      border-radius:8px;
-    }
-
-    /* subtle animations respecting prefers-reduced-motion */
-    @media (prefers-reduced-motion: reduce){
-      .progress-fill, .timeline .dot, .card{ transition: none !important; animation: none !important; }
-    }
+    #qrCodeContainer { text-align: center; margin-top: 16px; }
   </style>
 </head>
 <body>
-  <div class="wrap" role="main">
-    <header class="track-header" aria-label="Tracking header">
-      <div class="brand">
-        <img src="logo.png" alt="ParcelForce logo" />
-        <div>
-          <h1>ParcelForce Live Tracker</h1>
-          <div class="breadcrumbs" aria-hidden="true">Home / Tracking</div>
-        </div>
-      </div>
+  <div class="section">
+    <h2 id="trackingNumber">📦 Tracking Number: RB123456789CN</h2>
+    <p><strong>Last Updated:</strong> <span id="lastUpdated">2025-11-24 08:18</span></p>
 
-      <div class="actions" aria-hidden="false">
-        <button class="btn btn-ghost" id="copyBtn" title="Copy tracking number">Copy</button>
-        <button class="btn btn-ghost" id="shareBtn" title="Share tracker">Share</button>
-        <button class="btn btn-primary" id="backBtn" title="Back to home" onclick="location.href='index.html'">Home</button>
-      </div>
-    </header>
+    <div class="progress-bar"><div class="progress" id="progressFill"></div></div>
 
-    <main>
-      <!-- LEFT: Map + summary -->
-      <section class="card" aria-labelledby="summaryTitle">
-        <div class="summary" id="summaryTitle">
-          <div class="meta">
-            <div class="tracking" aria-live="polite">
-              <div class="code" id="trackingCode">PF557690344CN</div>
-              <button class="tracking copy" id="copyInline" aria-label="Copy tracking number">📋</button>
-              <div class="updated" id="lastUpdated">Last update: —</div>
-            </div>
-            <div class="meta-actions" aria-hidden="true">
-              <button class="btn btn-ghost" id="printBtn" onclick="window.print()">Print</button>
-              <button class="btn btn-ghost" id="directionsBtn">Get directions</button>
-            </div>
-          </div>
+    <h3>Parcel journey</h3>
+    <div class="progress-container">
+      <div class="progress-step" id="step1">Picked Up (UK — 22/11/2025)</div>
+      <div class="progress-step" id="step2">Arrived in South Africa — 24/11/2025</div>
+      <div class="progress-step" id="step3">Delivered (Expected 25/11/2025)</div>
+    </div>
 
           <div class="progress-row" aria-hidden="false">
             <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
@@ -324,247 +106,80 @@
           </div>
         </div>
 
-        <hr style="border:none;margin:12px 0 8px;border-top:1px solid rgba(15,23,36,0.04)"/>
+    <div id="recipientInfo">
+      <p><strong>Sender:</strong> Williams Andrew</p>
+      <p><strong>Phone:</strong> +44 7349 554526</p>
+      <p><strong>Receiver:</strong> Doreen Debra van der Merwe</p>
+      <p><strong>Address:</strong> Castle Gate Office Block, VDT Attorneys, Pretoria</p>
+      <p><strong>Phone:</strong> 0611470840</p>
+      <p><strong>Email:</strong> doreenm@vdt.co.za</p>
+    </div>
 
-        <div class="map-wrap card" aria-label="Live location map">
-          <div id="map" role="region" aria-label="Parcel current location map"></div>
-          <div class="map-fallback" id="mapFallback" aria-hidden="true">
-            Map not available — location: <span id="coordsText"></span>
-          </div>
-        </div>
+    <p><strong>Estimated Delivery:</strong> 2025-11-25</p>
 
-        <div style="margin-top:12px;">
-          <h3 style="margin:0 0 10px 0;color:var(--brand-navy)">Status updates</h3>
-          <ul class="status-list" id="statusList" aria-live="polite"></ul>
-        </div>
-      </section>
+    <h3>Status updates</h3>
+    <ul class="status-list">
+      <li><strong>Last Checkpoint:</strong> Johannesburg OR Tambo Airport — Arrived 24/11/2025</li>
+    </ul>
 
-      <!-- RIGHT: Details / recipient / QR -->
-      <aside class="card details" aria-labelledby="detailsTitle">
-        <h2 id="detailsTitle" style="font-size:1.05rem;margin:0 0 6px 0;color:var(--brand-navy)">Shipment details</h2>
+    <div class="alert">⚠ Customs and delivery fee must be paid before parcel can proceed for Delivery</div>
 
-        <div class="recipient" aria-label="Sender and recipient">
-          <div class="row"><div class="label">Sender</div><div id="senderName">—</div></div>
-          <div class="row"><div class="label">From</div><div id="senderAddress">—</div></div>
-          <div class="row"><div class="label">Receiver</div><div id="recipientName">—</div></div>
-          <div class="row"><div class="label">To</div><div id="recipientAddress">—</div></div>
-          <div class="row"><div class="label">ETA</div><div id="eta">—</div></div>
-        </div>
+    <button class="support-btn" onclick="window.location.href='index.html'">🔙 Back to Home</button>
+    <button class="support-btn" onclick="window.open('https://wa.me/27633373857', '_blank')">WhatsApp Support</button>
+    <button class="support-btn" onclick="alert('Redirecting to secure payment portal...')">Pay Customs Fee</button>
 
-        <div class="status" style="margin-top:8px;">
-          <h3 style="margin:8px 0 6px 0;color:var(--brand-red)">Current checkpoint</h3>
-          <div id="currentCheckpoint" class="status-item" aria-live="polite">—</div>
-        </div>
+    <h3>Live map</h3>
+    <div id="map"></div>
 
-        <div class="qr-area" style="margin-top:8px;">
-          <h3 style="margin:8px 0 6px 0;color:var(--brand-navy)">QR / Share</h3>
-          <div class="qr-canvas" id="qrCodeContainer" aria-hidden="false"></div>
-          <div style="display:flex;gap:8px;justify-content:center;margin-top:8px">
-            <button class="btn btn-ghost" id="downloadQrBtn">Download QR</button>
-            <button class="btn btn-primary" id="chatBtn" onclick="window.open('https://wa.me/27633373857','_blank')">WhatsApp Support</button>
-          </div>
-        </div>
-      </aside>
-    </main>
-
-    <footer class="track-footer">
-      <div>ParcelForce International Courier &copy; <span id="year"></span></div>
-      <div style="color:var(--muted)">Privacy • Terms • Accessibility</div>
-    </footer>
+    <h3>QR code</h3>
+    <div id="qrCodeContainer"></div>
   </div>
 
   <!-- Scripts: load lightweight libs dynamically to avoid blocking -->
   <script>
-    (function () {
-      // ---------- sample data (replace with your real API) ----------
-      const SAMPLE = {
-        "PF557690344CN": {
-          sender:{name:"Woods Loan Office", address:"1736 Atlantic Ave, Atlantic City, NJ 08401, United States"},
-          recipient:{name:"Ella Irene Pelling", address:"35 Ringley Road, Horsham, West Sussex RH12 4AS England"},
-          journey:[
-            "Collected — 04 Nov 2025",
-            "Departed hub — 24 Nov 2025",
-            "Out for delivery — 25 Nov 2025"
-          ],
-          deliveryDate:"2025-11-25",
-          checkpoint:"Parcel is currently in transit",
-          coords:[51.0629, -0.3270],
-          status:"in_transit"
-        },
-        "RB123456789CN": {
-          sender:{name:"Williams Andrew", address:"Castle Gate Office Block, Pretoria"},
-          recipient:{name:"Doreen van der Merwe", address:"Castle Gate Office Block, Pretoria"},
-          journey:[
-            "Collected — 22 Nov 2025",
-            "Cleared export hub — 24 Nov 2025",
-            "Out for delivery — 25 Nov 2025"
-          ],
-          deliveryDate:"2025-11-25",
-          checkpoint:"Parcel is currently in transit in international transit",
-          coords:[-26.1392, 28.2460],
-          status:"in_transit"
-        }
-      };
-
-      // ---------- helpers ----------
-      function qs(id){ return document.getElementById(id); }
-      function el(tag, attrs = {}) {
-        const e = document.createElement(tag);
-        for(const k in attrs) e.setAttribute(k, attrs[k]);
-        return e;
-      }
-
-      function getRefFromURL(){
-        const p = new URLSearchParams(location.search);
-        return (p.get('ref') || '').toUpperCase() || 'PF557690344CN';
-      }
-
-      function formatISONow(){
-        return new Date().toLocaleString();
-      }
-
-      // ---------- UI wiring ----------
-      const ref = getRefFromURL();
-      const parcel = SAMPLE[ref];
-      const yearSpan = qs('year'); yearSpan.textContent = new Date().getFullYear();
-
-      if (!parcel) {
-        document.body.innerHTML = '<div style="padding:40px;text-align:center"><h2>Tracking number not found</h2><p>Please verify and try again.</p></div>';
-        return;
-      }
-
-      qs('trackingCode').textContent = ref;
-      qs('lastUpdated').textContent = formatISONow();
-      qs('senderName').textContent = parcel.sender.name;
-      qs('senderAddress').textContent = parcel.sender.address;
-      qs('recipientName').textContent = parcel.recipient.name;
-      qs('recipientAddress').textContent = parcel.recipient.address;
-      qs('eta').textContent = parcel.deliveryDate;
-      qs('currentCheckpoint').textContent = parcel.checkpoint;
-
-      // status list
-      const statusList = qs('statusList');
-      parcel.journey.slice().reverse().forEach(step => {
-        const li = el('li'); li.className = 'status-item';
-        li.textContent = step;
-        statusList.appendChild(li);
+    // Make sure DOM is ready before running
+    window.addEventListener('DOMContentLoaded', () => {
+      // Toggle recipient details
+      const toggle = document.getElementById('revealInfo');
+      const info = document.getElementById('recipientInfo');
+      toggle.addEventListener('change', () => {
+        info.style.display = toggle.checked ? 'block' : 'none';
       });
 
-      // progress and timeline
-      const progressFill = qs('progressFill');
-      const dot1 = qs('dot1'), dot2 = qs('dot2'), dot3 = qs('dot3');
-
-      let percent = 10;
-      if (parcel.status === 'in_transit') { percent = 66; dot2.classList.add('active'); }
-      else if (parcel.status === 'delivered') { percent = 100; dot3.classList.add('active'); }
-      else { dot1.classList.add('active'); }
-
-      progressFill.style.width = percent + '%';
-      progressFill.setAttribute('aria-valuenow', percent);
-
-      // Map: load Leaflet dynamically and init map
-      function loadScript(src, callback){
-        const s = document.createElement('script'); s.src = src; s.defer = true;
-        s.onload = callback; s.onerror = () => console.warn('Failed to load', src);
-        document.head.appendChild(s);
+      // Progress bar example
+      const today = new Date("2025-11-24");
+      const step1Date = new Date("2025-11-22");
+      const step2Date = new Date("2025-11-24");
+      const step3Date = new Date("2025-11-25");
+      let width = 33;
+      if (today >= step2Date && today < step3Date) {
+        width = 66;
+        document.getElementById('step2').classList.add('active');
+      } else if (today >= step3Date) {
+        width = 100;
+        document.getElementById('step3').classList.add('active');
+      } else {
+        document.getElementById('step1').classList.add('active');
       }
+      document.getElementById('progressFill').style.width = width + '%';
 
-      function initMap(coords, label){
-        try {
-          // eslint-disable-next-line no-undef
-          const map = L.map('map', { zoomControl:true }).setView(coords, 10);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19, attribution: '&copy; OpenStreetMap contributors'
-          }).addTo(map);
+      // Initialize Leaflet map (Johannesburg OR Tambo)
+      const map = L.map('map').setView([-26.1392, 28.2460], 10);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+      L.marker([-26.1392, 28.2460]).addTo(map);
 
-          const marker = L.marker(coords, { title: label }).addTo(map);
-          marker.bindPopup(label).openPopup();
-          qs('coordsText').textContent = coords.join(', ');
-
-        } catch (e) {
-          console.error('Map init error', e);
-          qs('map').style.display = 'none';
-          qs('mapFallback').style.display = 'block';
-        }
-      }
-
-      // load leaflet and init
-      loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', () => {
-        initMap(parcel.coords, parcel.checkpoint);
+      // QR code render
+      const params = new URLSearchParams(window.location.search);
+      const ref = params.get('ref') || 'RB123456789CN';
+      const url = `https://parcel-force.github.io/parcelforce-site/track.html?ref=${ref}`;
+      const canvas = document.createElement('canvas');
+      QRCode.toCanvas(canvas, url, (err) => {
+        if (err) console.error(err);
+        document.getElementById('qrCodeContainer').appendChild(canvas);
       });
-
-      // QR code: load qrcode lib then render canvas
-      loadScript('https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js', () => {
-        try {
-          const container = qs('qrCodeContainer');
-          const url = `${location.origin}${location.pathname}?ref=${encodeURIComponent(ref)}`;
-          const canvas = document.createElement('canvas');
-          canvas.setAttribute('aria-hidden','false');
-          QRCode.toCanvas(canvas, url, { width:160 }, (err) => {
-            if(err) { console.error(err); container.textContent = 'QR unavailable'; return; }
-            container.appendChild(canvas);
-            qs('downloadQrBtn').onclick = () => {
-              const link = document.createElement('a');
-              link.download = `${ref}.png`;
-              link.href = canvas.toDataURL();
-              link.click();
-            };
-          });
-        } catch (e) { console.warn('QR error', e); }
-      });
-
-      // copy / share handlers
-      function copyText(text){
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          return navigator.clipboard.writeText(text);
-        } else {
-          // fallback
-          const ta = el('textarea'); ta.value = text; document.body.appendChild(ta);
-          ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-          return Promise.resolve();
-        }
-      }
-
-      qs('copyBtn').addEventListener('click', () => {
-        copyText(ref).then(()=>{ alert('Tracking number copied'); }).catch(()=>{ alert('Copy failed'); });
-      });
-      qs('copyInline').addEventListener('click', () => {
-        copyText(ref).then(()=>{ alert('Copied'); }).catch(()=>{ alert('Copy failed'); });
-      });
-
-      qs('shareBtn').addEventListener('click', async () => {
-        const shareUrl = `${location.origin}${location.pathname}?ref=${encodeURIComponent(ref)}`;
-        if (navigator.share) {
-          try { await navigator.share({ title:`Parcel ${ref}`, url: shareUrl }); }
-          catch(e){ /* user canceled */ }
-        } else {
-          copyText(shareUrl).then(()=> alert('Share link copied to clipboard')).catch(()=> alert('Unable to share'));
-        }
-      });
-
-      // directions handler: opens maps with coordinates
-      qs('directionsBtn').addEventListener('click', () => {
-        const [lat,lon] = parcel.coords;
-        const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
-        window.open(mapsUrl, '_blank', 'noopener');
-      });
-
-      // print styling: handled via button earlier
-
-      // small accessibility improvements
-      // announce latest status to screen readers
-      const liveAnnounce = el('div');
-      liveAnnounce.setAttribute('aria-live', 'polite');
-      liveAnnounce.style.position = 'absolute';
-      liveAnnounce.style.left = '-9999px';
-      liveAnnounce.textContent = `Status: ${parcel.checkpoint}`;
-      document.body.appendChild(liveAnnounce);
-
-      // display last updated time automatically every minute
-      setInterval(()=> qs('lastUpdated').textContent = formatISO(new Date()), 60_000);
-      function formatISO(d){ return d.toLocaleString(); }
-
-    })();
+    });
   </script>
 </body>
 </html>

@@ -40,6 +40,7 @@ onValue(parcelRef, (snapshot) => {
     <p><strong>Phone:</strong> ${data.phone}</p>
     <p><strong>Email:</strong> ${data.email}</p>
   `;
+
   const invoicesRef = ref(db, 'invoices');
   onValue(invoicesRef, (snapshot) => {
     const list = document.getElementById('invoiceList');
@@ -58,7 +59,7 @@ onValue(parcelRef, (snapshot) => {
     } else {
       list.innerHTML = '<li>No invoices found in the system.</li>';
     }
-  }
+  });
 });
 
 function getProgressWidth(statusArray) {
