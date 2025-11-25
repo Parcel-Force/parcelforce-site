@@ -6,19 +6,36 @@
   <title>ParcelForce | Track. Deliver. Impress.</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <style>
-    :root {
-      --red: #c8102e;
-      --dark: #1f1f1f;
-      --light: #f9f9f9;
-      --gray: #f0f0f0;
-      --white: #fff;
-      --text: #333;
+    /* ParcelForce — Modern drop-in stylesheet (red adjusted to a darker, less shiny tone)
+       Replace your existing <style> block with this or save as styles.css and link it.
+       Mobile-first, accessible, fluid typography, dark-mode aware.
+    */
+
+    /* Load fonts (works inside CSS; no HTML edits needed) */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@600;700&display=swap');
+
+    :root{
+      /* Brand */
+      --brand-red: #9B0F22;        /* darker, less shiny red (primary accent) */
+      --brand-red-dark: #7F0D1A;   /* deeper red used for gradients */
+      --brand-red-rgb: 155,15,34;  /* RGB form for shadows/rgba usage */
+
+      --brand-navy: #0B3D91;      /* primary UI color for trust */
+      --bg: #F7F8FA;
+      --card: #FFFFFF;
+      --muted: #6B7280;
+      --text: #0F1724;
+      --glass: rgba(255,255,255,0.6);
+      --shadow: 0 6px 22px rgba(11,61,145,0.08);
+      --radius: 12px;
+
+      /* Sizes */
+      --container: 1200px;
+      --gap: 20px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
+    /* Dark mode overrides are triggered via your existing body.dark-mode toggle.
+       This file respects that class and adjusts colors accordingly. */
     body {
       margin: 0;
       min-height: 100vh;
@@ -29,18 +46,22 @@
       -moz-osx-font-smoothing:grayscale;
       line-height: 1.45;
       transition: background .25s ease, color .25s ease;
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
     }
 
+    /* Respect user's reduced motion */
     @media (prefers-reduced-motion: reduce){
       * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition: none !important; scroll-behavior: auto !important; }
     }
 
+    /* Utility container */
     section, .hero-overlay {
       width: min(100%, var(--container));
       margin-inline: auto;
       padding-inline: 20px;
     }
 
+    /* Header */
     header{
       display:flex;
       gap: 16px;
@@ -56,6 +77,7 @@
       border-bottom: 1px solid rgba(11,61,145,0.04);
     }
 
+    /* Logo */
     .logo{
       height:44px;
       width:auto;
@@ -65,6 +87,7 @@
       filter: drop-shadow(0 2px 6px rgba(11,61,145,0.08));
     }
 
+    /* Nav */
     nav{
       display:flex;
       gap:12px;
@@ -89,7 +112,12 @@
       outline: none;
       color: var(--brand-navy);
     }
+    nav a[aria-current="page"]{
+      background: linear-gradient(90deg, rgba(var(--brand-red-rgb),0.08), rgba(11,61,145,0.06));
+      box-shadow: inset 0 -3px 0 rgba(var(--brand-red-rgb),0.12);
+    }
 
+    /* Toggle & search area */
     .toggle-container{
       display:flex;
       gap:12px;
@@ -102,14 +130,13 @@
       border-radius:8px;
       display:inline-grid;
       place-items:center;
-      background: transparent;
-      border: none;
     }
     #modeIcon:focus{
       outline: 3px solid rgba(11,61,145,0.12);
       outline-offset:2px;
     }
 
+    /* Search */
     .search-bar input{
       padding:8px 12px;
       border-radius:999px;
@@ -125,10 +152,11 @@
       outline: none;
     }
 
+    /* HERO - mobile-first */
     .hero{
       position:relative;
       overflow:hidden;
-      min-height:72vh;
+      min-height:72vh; /* mobile */
       display:flex;
       align-items:center;
       justify-content:center;
@@ -136,6 +164,7 @@
       background: linear-gradient(180deg, rgba(11,61,145,0.02), transparent);
     }
 
+    /* Video cover */
     .bg-video{
       position:absolute;
       inset:0;
@@ -147,8 +176,7 @@
       transform-origin:center;
     }
 
-    .hero-poster{ display:none; width:100%; height:100%; object-fit:cover; z-index:0; }
-
+    /* fallback if video fails — keeps hero readable */
     .hero::before{
       content:"";
       position:absolute;
@@ -157,6 +185,7 @@
       z-index:0;
     }
 
+    /* overlay content */
     .hero-overlay{
       position:relative;
       z-index:2;
@@ -168,6 +197,7 @@
       padding-block:48px;
     }
 
+    /* Heading scale (fluid) */
     .hero-overlay h1{
       margin:0;
       font-family: "Poppins", "Inter", system-ui, sans-serif;
@@ -186,6 +216,7 @@
       text-shadow: 0 2px 8px rgba(0,0,0,0.35);
     }
 
+    /* Tracking input & button grouped */
     .hero-overlay input#trackingInput{
       width: min(92%, 520px);
       padding:14px 16px;
@@ -197,8 +228,11 @@
       box-shadow: 0 6px 20px rgba(3,8,23,0.12);
       outline: none;
     }
-    .hero-overlay input#trackingInput::placeholder{ color: #9CA3AF; }
+    .hero-overlay input#trackingInput::placeholder{
+      color: #9CA3AF;
+    }
 
+    /* Track button (uses the darker red) */
     #trackBtn{
       margin-top:6px;
       display:inline-block;
@@ -217,6 +251,7 @@
     #trackBtn:active{ transform: translateY(-1px); }
     #trackBtn:disabled{ opacity:.7; cursor:not-allowed; box-shadow:none; transform:none; }
 
+    /* spinner */
     .spinner{
       width:40px;
       height:40px;
@@ -229,8 +264,12 @@
     }
     @keyframes spin{ to{ transform: rotate(360deg); } }
 
-    section{ padding-block:64px; }
+    /* SECTION default */
+    section{
+      padding-block:64px;
+    }
 
+    /* Section headings */
     section h2{
       text-align:center;
       font-family: "Poppins", Inter, sans-serif;
@@ -240,6 +279,7 @@
       margin-bottom:26px;
     }
 
+    /* Services grid */
     .services-grid{
       display:grid;
       gap:18px;
@@ -251,22 +291,40 @@
       background: var(--card);
       padding:18px;
       border-radius: var(--radius);
-      box-shadow: 0 6px 22px rgba(11,61,145,0.08);
+      box-shadow: var(--shadow);
       transition: transform .18s ease, box-shadow .18s ease;
       text-align:left;
       display:flex;
       flex-direction:column;
       gap:12px;
     }
-    .service-card h3{ margin:0; font-size:1.05rem; color: var(--brand-navy); }
+    .service-card h3{
+      margin:0;
+      font-size:1.05rem;
+      color: var(--brand-navy);
+    }
     .service-card p{ margin:0; color:var(--muted); font-size:0.95rem; line-height:1.45; }
-    .service-card button{ margin-top:auto; align-self:flex-start; padding:10px 18px; border-radius:10px; background: linear-gradient(90deg, var(--brand-navy), #214ea8); color:#fff; border:none; font-weight:600; cursor:pointer; }
+    .service-card button{
+      margin-top:auto;
+      align-self:flex-start;
+      padding:10px 18px;
+      border-radius:10px;
+      background: linear-gradient(90deg, var(--brand-navy), #214ea8);
+      color:#fff;
+      border:none;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow: 0 8px 20px rgba(11,61,145,0.08);
+      transition: transform .12s ease, opacity .12s ease;
+    }
+    .service-card button:hover{ transform: translateY(-3px); }
 
+    /* Create account and contact card */
     .create-account, .contact-card{
       background: var(--card);
       padding:22px;
       border-radius: var(--radius);
-      box-shadow: 0 6px 22px rgba(11,61,145,0.08);
+      box-shadow: var(--shadow);
       max-width:760px;
       margin-inline:auto;
     }
@@ -297,10 +355,12 @@
       box-shadow: 0 8px 20px rgba(var(--brand-red-rgb),0.12);
     }
 
+    /* Contact card */
     .contact-card p{ margin:8px 0; color:var(--muted); font-size:1.02rem; }
     .contact-card a{ color: var(--brand-navy); font-weight:600; text-decoration:none; }
     .contact-card a:hover{ text-decoration:underline; }
 
+    /* Footer */
     footer{
       background: linear-gradient(180deg, #0b214d, #071737);
       color: #dbeafe;
@@ -311,29 +371,37 @@
     footer img{ height:48px; display:inline-block; margin-bottom:8px; filter: drop-shadow(0 10px 30px rgba(11,61,145,0.12)); }
     footer p{ margin:6px 0; font-size:0.95rem; opacity:0.95; }
 
+    /* Desktop / larger screens */
     @media (min-width: 720px){
       .hero{ min-height:82vh; padding-block:48px; }
       .services-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
       .hero-overlay{ gap:22px; }
     }
+
+    /* Wide desktop */
     @media (min-width: 1100px){
       header{ padding-inline:28px; }
       .services-grid{ grid-template-columns: repeat(3, minmax(0,1fr)); gap:24px; }
       .hero-overlay{ padding-block:64px; }
       .hero-overlay input#trackingInput{ width:520px; }
     }
+
+    /* Small screens: compact header */
     @media (max-width: 720px){
-      header{ flex-direction: column; gap:10px; padding-block:10px; }
+      header{
+        flex-direction: column;
+        align-items:stretch;
+        gap:10px;
+        padding-block:10px;
+      }
       nav{ order:2; justify-content:center; }
       .toggle-container{ order:3; justify-content:center; }
       .logo{ margin-inline:auto; }
       .services-grid{ grid-template-columns: 1fr; }
       .hero-overlay{ padding-block:36px; text-align:center; }
-      .bg-video{ display:none; }
-      .hero-poster{ display:block; }
     }
 
-    /* Dark mode */
+    /* Dark mode (keeps your existing toggle behavior) */
     body.dark-mode{
       background: linear-gradient(180deg, #06070a, #0b1220);
       color: #E6EEF8;
@@ -343,6 +411,7 @@
       border-bottom: 1px solid rgba(255,255,255,0.04);
     }
     body.dark-mode nav a{ color: #E6EEF8; }
+    body.dark-mode nav a:hover{ background: rgba(255,255,255,0.03); }
     body.dark-mode .hero::before{ background: linear-gradient(180deg, rgba(0,0,0,0.5), rgba(0,0,0,0.35)); }
     body.dark-mode .service-card,
     body.dark-mode .create-account,
@@ -355,46 +424,26 @@
     body.dark-mode section h2{ color:#FFCCD0; }
     body.dark-mode footer{ background: linear-gradient(180deg,#030416,#07102a); }
 
+    /* Focus outline improvements for accessibility */
     a:focus, button:focus, input:focus {
       outline: 3px solid rgba(11,61,145,0.12);
       outline-offset: 3px;
       border-radius: 8px;
     }
 
+    /* Small visual tweaks for existing inline alerts or red border usage in your JS */
     input[style*="border-color: red"], .error {
       box-shadow: 0 4px 18px rgba(var(--brand-red-rgb),0.12);
       border-color: rgba(var(--brand-red-rgb),0.9) !important;
     }
 
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        gap: 15px;
-      }
-
-      nav {
-        justify-content: center;
-      }
-
-      .hero-overlay h1 {
-        font-size: 2em;
-      }
-
-      .hero-overlay p {
-        font-size: 1em;
-      }
-
-      section h2 {
-        font-size: 2em;
-      }
-    }
+    /* End of stylesheet */
   </style>
 </head>
 <body>
-
   <header>
     <img src="logo.png" alt="ParcelForce Logo" class="logo" />
-    <nav role="navigation" aria-label="Main navigation">
+    <nav>
       <a href="#home">Home</a>
       <a href="#about">About</a>
       <a href="#services">Services</a>
@@ -403,27 +452,24 @@
       <a href="auth.html">Sign Up</a>
     </nav>
     <div class="toggle-container">
-      <button id="modeIcon" onclick="toggleDarkMode()" aria-label="Toggle dark mode">🌙</button>
+      <span id="modeIcon" onclick="toggleDarkMode()">🌙</span>
       <div class="search-bar">
-        <input type="text" placeholder="Search..." aria-label="Search site" />
+        <input type="text" placeholder="Search..." />
       </div>
     </div>
   </header>
 
   <section class="hero" id="home">
-    <!-- poster fallback for small screens -->
-    <img src="hero.jpg" alt="Courier on the road" class="hero-poster" />
-    <video autoplay muted loop playsinline class="bg-video" poster="hero.jpg">
+    <video autoplay muted loop playsinline class="bg-video">
       <source src="courier-bg.mp4" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
-
     <div class="hero-overlay">
       <h1>Track Your Parcel</h1>
       <p>Real-time updates. Global reach. Premium service.</p>
-      <input type="text" id="trackingInput" placeholder="Enter tracking number" aria-label="Tracking number" />
-      <button id="trackBtn" type="button" onclick="trackItem()">Track Now</button>
-      <div id="spinner" class="spinner" role="status" aria-live="polite" aria-hidden="true"></div>
+      <input type="text" id="trackingInput" placeholder="Enter tracking number" />
+      <button id="trackBtn" onclick="trackItem()">Track Now</button>
+      <div id="spinner" class="spinner"></div>
     </div>
   </section>
 
@@ -433,44 +479,44 @@
       <div class="service-card">
         <h3>📦 Send an Item</h3>
         <p>Book a pickup or drop off your parcel.</p>
-        <button type="button">Send Now</button>
+        <button>Send Now</button>
       </div>
       <div class="service-card">
         <h3>🔍 Track Your Item</h3>
         <p>Check delivery status in real time.</p>
-        <button type="button" onclick="document.getElementById('trackingInput').scrollIntoView({behavior: 'smooth'})">Track</button>
+        <button onclick="document.getElementById('trackingInput').scrollIntoView({behavior: 'smooth'})">Track</button>
       </div>
       <div class="service-card">
         <h3>📬 Redelivery</h3>
         <p>Missed a delivery? Book a redelivery.</p>
-        <button type="button">Reschedule</button>
+        <button>Reschedule</button>
       </div>
       <div class="service-card">
         <h3>🌍 International Shipping</h3>
         <p>Send parcels worldwide with premium support.</p>
-        <button type="button">Explore</button>
+        <button>Explore</button>
       </div>
       <div class="service-card">
         <h3>📮 Find a Postcode</h3>
         <p>Search for UK addresses and postcodes.</p>
-        <button type="button">Search</button>
+        <button>Search</button>
       </div>
     </div>
   </section>
 
   <section class="create-account">
     <h2>Create an Account</h2>
-    <input type="text" id="username" placeholder="Username" required aria-label="Username">
-    <input type="email" id="email" placeholder="Email" required aria-label="Email">
-    <input type="password" id="password" placeholder="Password" required aria-label="Password">
-    <button id="createAccountBtn" type="button">Create Account</button>
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button id="createAccountBtn">Create Account</button>
   </section>
 
   <section id="contact">
     <h2>Contact Us</h2>
     <div class="contact-card">
       <p>📧 Email: <a href="mailto:Parcel_Force1986@outlook.com">Parcel_Force1986@outlook.com</a></p>
-      <p>💬 WhatsApp: <a href="https://wa.me/27633373857" target="_blank" rel="noopener noreferrer">+27 63 337 3857</a></p>
+      <p>💬 WhatsApp: <a href="https://wa.me/27633373857" target="_blank">+27 63 337 3857</a></p>
     </div>
   </section>
 
@@ -480,99 +526,63 @@
     <p>Privacy | Terms | Accessibility</p>
   </footer>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
-    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBqymK8EWPa9s7c_2uTUXzBONK3XfTipFU",
-      authDomain: "parcelforcetracker.firebaseapp.com",
-      databaseURL: "https://parcelforcetracker-default-rtdb.firebaseio.com",
-      projectId: "parcelforcetracker",
-      storageBucket: "parcelforcetracker.appspot.com",
-      messagingSenderId: "408904759435",
-      appId: "1:408904759435:web:eba15d67580426198bbc8e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-
-    // Track Item Function
-    window.trackItem = async function () {
+  <script>
+    // Track Item Function (local, no Firebase)
+    function trackItem() {
       const input = document.getElementById('trackingInput');
       const value = input.value.trim().toUpperCase();
       const pattern = /^[A-Z0-9]{9,21}$/;
       const spinner = document.getElementById('spinner');
       const button = document.getElementById('trackBtn');
 
-        if (!value || !pattern.test(value)) {
-          if (input) input.style.borderColor = "red";
-          window.alert && window.alert("Please enter a valid tracking number (9-21 characters).");
-          return;
-        }
+      if (!value || !pattern.test(value)) {
+        input.style.borderColor = "red";
+        alert("Please enter a valid tracking number (9-21 characters).");
+        return;
+      }
 
       input.style.borderColor = "#ccc";
       spinner.style.display = "inline-block";
       button.disabled = true;
       button.textContent = "Checking...";
 
-      try {
-        const snapshot = await get(child(ref(db), `invoices/${value}`));
-        if (snapshot.exists()) {
-          window.location.href = `track.html?ref=${encodeURIComponent(value)}`;
-        } else {
-          alert("Tracking number not found. Please check and try again.");
-        }
-      } catch (error) {
-        console.error("Firebase error:", error);
-        alert("Error checking tracking number. Try again later.");
-      } finally {
-        spinner.style.display = "none";
-        button.disabled = false;
-        button.textContent = "Track Now";
-      }
-    };
+      // Redirect directly to track.html with ?ref=...
+      setTimeout(() => {
+        window.location.href = `track.html?ref=${encodeURIComponent(value)}`;
+      }, 800); // small delay for spinner effect
+    }
 
-    // Create Account Function
+    // Create Account Function (local demo)
     const createBtn = document.getElementById('createAccountBtn');
-    createBtn.addEventListener('click', async () => {
+    createBtn.addEventListener('click', () => {
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const username = document.getElementById('username').value.trim();
 
-          if (!username || !email || !password) {
-            window.alert && window.alert("Please fill in all fields.");
-            return;
-          }
-
-          if (password.length < 6) {
-            window.alert && window.alert("Password must be at least 6 characters.");
-            return;
-          }
-
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        alert("Account created successfully! Welcome, " + username + "!");
-        // Clear form
-        document.getElementById('username').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('password').value = '';
-      } catch (error) {
-        console.error("Error creating account:", error);
-        alert("Error: " + error.message);
+      if (!username || !email || !password) {
+        alert("Please fill in all fields.");
+        return;
       }
+
+      if (password.length < 6) {
+        alert("Password must be at least 6 characters.");
+        return;
+      }
+
+      alert("Account created successfully! Welcome, " + username + "!");
+      // Clear form
+      document.getElementById('username').value = '';
+      document.getElementById('email').value = '';
+      document.getElementById('password').value = '';
     });
 
     // Dark Mode Toggle
-    window.toggleDarkMode = function() {
+    function toggleDarkMode() {
       document.body.classList.toggle('dark-mode');
       const icon = document.getElementById('modeIcon');
       icon.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-      // Save preference
       localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-    };
+    }
 
     // Load dark mode preference
     if (localStorage.getItem('darkMode') === 'true') {
