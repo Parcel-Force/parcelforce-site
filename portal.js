@@ -1,21 +1,7 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
-import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+// portal.js (cleaned, no Firebase)
 
-// ✅ Your Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyBqymK8EWPa9s7c_2uTUXzBONK3XfTipFU",
-  authDomain: "parcelforcetracker.firebaseapp.com",
-  databaseURL: "https://parcelforcetracker-default-rtdb.firebaseio.com",
-  projectId: "parcelforcetracker",
-  storageBucket: "parcelforcetracker.firebasestorage.app",
-  messagingSenderId: "408904759435",
-  appId: "1:408904759435:web:eba15d67580426198bbc8e"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-window.searchParcel = function () {
+// 🔍 Search Parcel function
+window.searchParcel = async function () {
   const refNum = document.getElementById('searchInput').value.trim();
   const resultArea = document.getElementById('resultArea');
   resultArea.innerHTML = '🔄 Searching...';
@@ -25,14 +11,24 @@ window.searchParcel = function () {
     return;
   }
 
-  const dbRef = ref(db);
-  get(child(dbRef, 'parcels/' + refNum)).then((snapshot) => {
-    if (!snapshot.exists()) {
+  try {
+    // 👉 Replace this with your own API call or backend logic
+    // Example: const response = await fetch(`/api/parcels/${refNum}`);
+    // const data = await response.json();
+
+    // Temporary mock data for demonstration
+    const data = {
+      status: [
+        { status: "In Transit", location: "Johannesburg Hub" },
+        { status: "Out for Delivery", location: "Sandton" }
+      ]
+    };
+
+    if (!data) {
       resultArea.innerHTML = `<p>❌ Parcel <strong>${refNum}</strong> not found.</p>`;
       return;
     }
 
-    const data = snapshot.val();
     const latest = Array.isArray(data.status) ? data.status[data.status.length - 1] : {};
 
     resultArea.innerHTML = `
@@ -44,7 +40,7 @@ window.searchParcel = function () {
         <a href="receipt.html?ref=${refNum}" target="_blank">🧾 View Invoice</a>
       </div>
     `;
-  }).catch((error) => {
+  } catch (error) {
     resultArea.innerHTML = `<p>Error: ${error.message}</p>`;
-  });
+  }
 };

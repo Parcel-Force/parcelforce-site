@@ -1,0 +1,207 @@
+// auth.js — local-only authentication (no Firebase)
+// Simple demo auth: stores users in localStorage under 'pf_demo_users' and current user under 'pf_current_user'.
+// Intended for development/local static sites. Do NOT use this for production authentication.
+
+const EMAIL_KEY = 'pf_demo_users';
+const CURRENT_USER_KEY = 'pf_current_user';
+
+
+
+
+
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const loginBtn = document.getElementById('loginBtn');
+const signupBtn = document.getElementById('signupBtn');
+const loginBtnText = document.getElementById('loginBtnText');
+const signupBtnText = document.getElementById('signupBtnText');
+const feedbackEl = document.getElementById('feedback');
+const togglePasswordBtn = document.getElementById('togglePassword');
+const switchLink = document.getElementById('switchLink');
+const divider = document.getElementById('divider');
+const formTitle = document.getElementById('formTitle');
+const formSubtitle = document.getElementById('formSubtitle');
+
+let isSignupMode = false;
+
+// --- Helpers ---
+function readUsers() {
+  try { return JSON.parse(localStorage.getItem(EMAIL_KEY) || '{}'); } catch (e) { return {}; }
+}
+function saveUsers(users) {
+  try { localStorage.setItem(EMAIL_KEY, JSON.stringify(users)); } catch (e) { /* ignore */ }
+}
+function setCurrentUser(user) {
+  try { localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user)); } catch (e) {}
+}
+function clearCurrentUser() {
+  try { localStorage.removeItem(CURRENT_USER_KEY); } catch (e) {}
+}
+
+function showFeedback(message, type = 'error') {
+  feedbackEl.textContent = message;
+  feedbackEl.className = type === 'success' ? 'success' : 'error';
+  feedbackEl.classList.remove('success','error');
+  feedbackEl.classList.add(type === 'success' ? 'success' : 'error');
+  feedbackEl.style.display = 'block';
+  // hide after a short while
+  setTimeout(() => { feedbackEl.style.display = 'none'; }, 5000);
+}
+
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function setLoading(button, on = true, text = '') {
+  if (!button) return;
+  if (on) {
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+    button.dataset.orig = button.innerHTML;
+    button.innerHTML = text || (button === loginBtn ? 'Processing...' : 'Working...');
+  } else {
+    button.disabled = false;
+    button.removeAttribute('aria-busy');
+    if (button.dataset.orig) {
+      button.innerHTML = button.dataset.orig;
+      delete button.dataset.orig;
+    }
+  }
+}
+
+function ensureDemoAccount() {
+  const users = readUsers();
+  if (!users['demo@parcelforce.test']) {
+    users['demo@parcelforce.test'] = { name: 'Demo User', email: 'demo@parcelforce.test', password: 'password' };
+    saveUsers(users);
+  }
+}
+
+// --- Auth flows (local) ---
+async function handleLogin() {
+  clearFeedback();
+  const email = (emailInput.value || '').trim().toLowerCase();
+  const password = passwordInput.value || '';
+
+  if (!email) { showFeedback('Please enter your email.'); emailInput.focus(); return; }
+  if (!validateEmail(email)) { showFeedback('Enter a valid email address.'); emailInput.focus(); return; }
+  if (!password) { showFeedback('Please enter your password.'); passwordInput.focus(); return; }
+
+  setLoading(loginBtn, true, 'Signing in...');
+  // simulate async delay
+  await new Promise(r => setTimeout(r, 450));
+
+  const users = readUsers();
+  const user = users[email];
+  if (!user) {
+    setLoading(loginBtn, false);
+    showFeedback('No account found. Please sign up.', 'error');
+    return;
+  }
+  if (user.password !== password) {
+    setLoading(loginBtn, false);
+    showFeedback('Incorrect password.', 'error');
+    return;
+  }
+
+  // success
+  setCurrentUser({ email: user.email, name: user.name });
+  setLoading(loginBtn, false);
+  showFeedback('Login successful — redirecting...', 'success');
+  // short delay to allow user to see the message
+  setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+}
+
+async function handleSignup() {
+  clearFeedback();
+  const email = (emailInput.value || '').trim().toLowerCase();
+  const password = passwordInput.value || '';
+
+  if (!email) { showFeedback('Please enter your email.'); emailInput.focus(); return; }
+  if (!validateEmail(email)) { showFeedback('Enter a valid email address.'); emailInput.focus(); return; }
+  if (!password) { showFeedback('Please enter a password.'); passwordInput.focus(); return; }
+  if (password.length < 6) { showFeedback('Use a stronger password (at least 6 characters).'); passwordInput.focus(); return; }
+
+  setLoading(signupBtn, true, 'Creating account...');
+  await new Promise(r => setTimeout(r, 600));
+
+  const users = readUsers();
+  if (users[email]) {
+    setLoading(signupBtn, false);
+    showFeedback('Email already registered — please log in.', 'error');
+    return;
+  }
+
+  // create user
+  users[email] = { name: email.split('@')[0], email, password };
+  saveUsers(users);
+
+  // auto-login after signup
+  setCurrentUser({ email, name: users[email].name });
+  setLoading(signupBtn, false);
+  showFeedback('Account created. Redirecting to dashboard...', 'success');
+  setTimeout(() => { window.location.href = 'dashboard.html'; }, 700);
+}
+
+// --- UI wiring ---
+function clearFeedback() {
+  feedbackEl.style.display = 'none';
+  feedbackEl.textContent = '';
+  feedbackEl.className = '';
+}
+
+togglePasswordBtn.addEventListener('click', () => {
+  const type = passwordInput.type === 'password' ? 'text' : 'password';
+  passwordInput.type = type;
+  togglePasswordBtn.textContent = type === 'password' ? '👁️' : '🙈';
+  togglePasswordBtn.setAttribute('aria-pressed', type === 'text' ? 'true' : 'false');
+});
+
+// Click handlers
+loginBtn.addEventListener('click', handleLogin);
+signupBtn.addEventListener('click', handleSignup);
+
+// Enter key behaviour
+emailInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') passwordInput.focus(); });
+passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') loginBtn.click(); });
+
+// Switch mode (login <-> signup)
+function switchMode() {
+  isSignupMode = !isSignupMode;
+  if (isSignupMode) {
+    formTitle.textContent = '🎉 Create Account';
+    formSubtitle.textContent = 'Join ParcelForce today';
+    loginBtn.style.display = 'none';
+    signupBtn.style.display = 'inline-block';
+    divider.style.display = 'none';
+    switchLink.textContent = 'Log in';
+    document.getElementById('modeText')?.setAttribute?.('aria-hidden','true');
+  } else {
+    formTitle.textContent = '🔐 Welcome Back';
+    formSubtitle.textContent = 'Sign in to track your parcels';
+    loginBtn.style.display = 'inline-block';
+    signupBtn.style.display = 'inline-block'; // keep create button visible (it acts as alternate action)
+    divider.style.display = 'block';
+    switchLink.textContent = 'Sign up';
+  }
+  // reset fields/feedback
+  emailInput.value = '';
+  passwordInput.value = '';
+  clearFeedback();
+  emailInput.focus();
+}
+switchLink.addEventListener('click', switchMode);
+
+// Initialize demo account and quick checks
+(function init() {
+  ensureDemoAccount();
+  // If user already signed-in (local-only), redirect to dashboard
+  try {
+    const current = JSON.parse(localStorage.getItem(CURRENT_USER_KEY) || 'null');
+    if (current && current.email) {
+      // short delay to avoid surprising redirect during dev
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 300);
+      return;
+    }
+  } catch (e) { /* ignore */ }
+})();

@@ -1,21 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
 
-// ✅ Your Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyBqymK8EWPa9s7c_2uTUXzBONK3XfTipFU",
-  authDomain: "parcelforcetracker.firebaseapp.com",
-  databaseURL: "https://parcelforcetracker-default-rtdb.firebaseio.com",
-  projectId: "parcelforcetracker",
-  storageBucket: "parcelforcetracker.firebasestorage.app",
-  messagingSenderId: "408904759435",
-  appId: "1:408904759435:web:eba15d67580426198bbc8e"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const auth = getAuth(app);
 
 // ✅ Auto-fill email if logged in
 onAuthStateChanged(auth, (user) => {

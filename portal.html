@@ -41,10 +41,11 @@
       margin-top: 10px;
       padding: 10px 20px;
       background-color: #0078D4;
-      color: white;
+      color: #fff;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
@@ -72,11 +73,36 @@
   </style>
 </head>
 <body>
-  <div class="portal">
-    <h2>📦 ParcelForce Client Portal</h2>
-    <input type="text" id="searchInput" placeholder="Enter your tracking number" />
-    <button onclick="searchParcel()">🔍 Search</button>
-    <div id="resultArea"></div>
-  </div>
+  <div id="header"></div>
+
+  <main>
+    <div class="portal">
+      <h2>📦 ParcelForce Client Portal</h2>
+      <input type="text" id="searchInput" placeholder="Enter your tracking number" />
+      <button onclick="searchParcel()">🔍 Search</button>
+      <div id="resultArea"></div>
+    </div>
+  </main>
+
+  <div id="footer"></div>
+
+  <script>
+    async function loadLayout() {
+      const header = await fetch('header.html').then(res => res.text());
+      const footer = await fetch('footer.html').then(res => res.text());
+      document.getElementById('header').innerHTML = header;
+      document.getElementById('footer').innerHTML = footer;
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const icon = document.getElementById('modeIcon');
+      if (icon) {
+        icon.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+      }
+    }
+
+    loadLayout();
+  </script>
 </body>
 </html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | ParcelForce</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+</head>
+<body>
+  <div id="header" aria-hidden="false"></div>
+
+  <main role="main">
+    <div class="auth-container" aria-labelledby="authTitle">
+      <img src="logo.png" alt="ParcelForce Logo" class="auth-logo" />
+      <h1 id="authTitle">Welcome Back</h1>
+      <p class="auth-subtitle">Log in to track your parcels</p>
+
+      <form id="loginForm" autocomplete="on" novalidate>
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="you@example.com"
+            required
+            aria-required="true"
+            aria-describedby="errorMsg"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              required
+              aria-required="true"
+              aria-describedby="errorMsg"
+              autocomplete="current-password"
+            />
+            <button id="togglePassword" type="button" aria-label="Show password">Show</button>
+          </div>
+        </div>
+
+        <div class="form-group" style="display:flex;align-items:center;gap:12px;">
+          <label style="display:flex;align-items:center;gap:8px;">
+            <input type="checkbox" id="remember" name="remember" />
+            Remember me
+          </label>
+          <a href="forgot.html" class="small-link" style="margin-left:auto;">Forgot password?</a>
+        </div>
+
+        <div id="errorMsg" class="error-message" role="alert" aria-live="assertive" style="display:none;"></div>
+
+        <button type="submit" class="btn-primary" id="loginBtn">
+          <span id="loginBtnText">Login</span>
+          <span id="loginSpinner" class="spinner" style="display:none;margin-left:8px;width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin .8s linear infinite;"></span>
+        </button>
+      </form>
+
+      <p class="auth-links">
+        Don't have an account? <a href="register.html">Sign up here</a>
+      </p>
+      <p class="auth-links">
+        <a href="index.html">← Back to tracking</a>
+      </p>
+    </div>
+  </main>
+
+  <div id="footer" aria-hidden="false"></div>
+
+  <script>
+    // lightweight layout include (keeps your original approach)
+    async function loadLayout() {
+      try {
+        const [header, footer] = await Promise.all([
+          fetch('header.html').then(res => res.ok ? res.text() : ''),
+          fetch('footer.html').then(res => res.ok ? res.text() : '')
+        ]);
+        if (header) document.getElementById('header').innerHTML = header;
+        if (footer) document.getElementById('footer').innerHTML = footer;
+      } catch (e) {
+        // failed to load includes — silently continue (no backend)
+        console.warn('Layout include failed', e);
+      }
+    }
+
+    loadLayout();
+  </script>
+
+  <script type="module" src="login.js"></script>
+
+  <style>
+    /* Minimal spinner animation (kept here in case your CSS files don't include it) */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-message { color: #c8102e; background: rgba(200,16,46,0.06); padding:10px; border-radius:8px; margin:12px 0; }
+    .small-link { font-size:0.95rem; color: #0b3d91; text-decoration: none; }
+    .small-link:hover { text-decoration: underline; }
+    /* Basic layout tweaks if auth.css missing — harmless fallback */
+    .auth-container { max-width:420px; margin:36px auto; padding:24px; border-radius:12px; background:#fff; box-shadow:0 10px 30px rgba(2,6,23,0.06); text-align:left; }
+    .auth-logo { height:56px; display:block; margin:0 auto 12px; }
+    .auth-subtitle { color:#6b7280; margin-bottom:18px; text-align:center; }
+    .form-group { margin-bottom:14px; }
+    label { display:block; font-weight:600; margin-bottom:6px; }
+    input[type="email"], input[type="password"] { width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e6e9ef; background:#fff; }
+    .btn-primary { background:linear-gradient(90deg,#9B0F22,#7F0D1A); color:#fff; padding:12px 18px; border-radius:10px; border:none; font-weight:700; cursor:pointer; width:100%; }
+  </style>
+</body>
+</html>

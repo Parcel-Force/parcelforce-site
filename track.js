@@ -1,6 +1,4 @@
 // track.js
-import { db } from './firebase.js';
-import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
 
 const params = new URLSearchParams(window.location.search);
 const trackingNumber = params.get('ref');

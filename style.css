@@ -1,10 +1,24 @@
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f2f2f2;
-  margin: 0;
-  padding: 0;
+/* === Base Styles === */
+:root {
+  --primary: #c8102e;
+  --accent: #f2f2f2;
+  --text: #2c3e50;
 }
 
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom right, #ffffff, #f0f0f0);
+  color: #333;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+main {
+  padding: 2rem;
+}
+
+/* === Invoice Styles === */
 .invoice {
   position: relative;
   max-width: 850px;
@@ -145,6 +159,7 @@ canvas#qrCodeCanvas {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
+
 .footer strong {
   color: #d6001c;
 }
@@ -167,25 +182,34 @@ button#printBtn:hover {
 }
 
 /* === Dashboard Styles === */
-:root {
-  --primary: #c8102e;
-  --accent: #f2f2f2;
-  --text: #2c3e50;
+.dashboard-logo {
+  display: block;
+  margin: 2rem auto;
+  max-width: 180px;
+  width: 100%;
+  height: auto;
 }
 
 .dashboard {
   max-width: 800px;
-  margin: 40px auto;
-  background: #fff;
-  padding: 30px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f9f9f9;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
 }
 
 .dashboard h2 {
   text-align: center;
   color: var(--primary);
   margin-bottom: 10px;
+}
+
+#welcomeMessage {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 1rem;
 }
 
 #userEmail {
@@ -195,30 +219,40 @@ button#printBtn:hover {
   margin-bottom: 20px;
 }
 
-.dashboard button {
-  display: block;
-  margin: 0 auto 30px;
-  padding: 10px 24px;
+.dashboard-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.dashboard-actions a,
+.dashboard-actions button {
   background-color: var(--primary);
   color: white;
   border: none;
+  padding: 0.6rem 1.2rem;
   border-radius: 6px;
-  font-size: 16px;
+  text-decoration: none;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
-.dashboard button:hover {
-  background-color: #a50e24;
+.dashboard-actions a:hover,
+.dashboard-actions button:hover {
+  background-color: #a00d24;
 }
 
 .parcel-card {
-  background: var(--accent);
+  background-color: white;
+  border: 1px solid #ddd;
   border-left: 5px solid var(--primary);
-  padding: 20px;
-  margin-bottom: 20px;
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
 }
 
 .parcel-card strong {
@@ -227,7 +261,7 @@ button#printBtn:hover {
 
 .parcel-card a {
   display: inline-block;
-  margin-top: 10px;
+  margin-top: 0.5rem;
   margin-right: 15px;
   color: var(--primary);
   text-decoration: none;
@@ -238,14 +272,7 @@ button#printBtn:hover {
   text-decoration: underline;
 }
 
-.dashboard-logo {
-  display: block;
-  margin: 0 auto 24px;
-  max-width: 160px;
-  width: 100%;
-  height: auto;
-}
-
+/* === Responsive Styles === */
 @media (max-width: 600px) {
   .dashboard {
     padding: 20px;
@@ -255,7 +282,89 @@ button#printBtn:hover {
     font-size: 14px;
   }
 
-  .dashboard button {
+  .dashboard-actions button {
     width: 100%;
   }
 }
+
+/* === Dark Mode === */
+body.dark-mode {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+body.dark-mode .dashboard {
+  background-color: #1e1e1e;
+  box-shadow: none;
+}
+
+body.dark-mode .parcel-card {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+
+body.dark-mode .dashboard-actions a,
+body.dark-mode .dashboard-actions button {
+  background-color: #e53935;
+}
+
+body.dark-mode .dashboard-actions a:hover,
+body.dark-mode .dashboard-actions button:hover {
+  background-color: #c62828;
+}
+
+/* === Print Styles === */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .dashboard-logo,
+  .dashboard-actions,
+  #welcomeMessage {
+    display: none;
+  }
+
+  .parcel-card {
+    page-break-inside: avoid;
+    border: none;
+    box-shadow: none;
+  }
+
+  #printBtn,
+  .qr-section {
+    display: none !important;
+  }
+}
+
+/* === Dark Mode Toggle Switch === */
+.dark-mode-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.toggle-label {
+  font-weight: 500;
+  margin-right: 10px;
+  color: var(--text);
+}
+
+.toggle-switch {
+  position: relative;
+  width: 50px;
+  height: 26px;
+  background-color: #ccc;
+  border-radius: 13px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-switch::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 

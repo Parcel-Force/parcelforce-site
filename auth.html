@@ -2,135 +2,147 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Client Login | ParcelForce</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Login | ParcelForce</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f4f4;
-      padding: 40px;
-      color: #333;
+    :root {
+      --red: #9B0F22;
+      --dark-red: #7F0D1A;
+      --light: #f4f4f4;
+      --white: #fff;
+      --text: #333;
+      --success: #28a745;
+      --error: #dc3545;
+      --muted: #6b7280;
     }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Inter, "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
+      background: linear-gradient(135deg, #eef2ff 0%, #fef6f6 100%);
+      min-height: 100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      color:var(--text);
+    }
+
+    .auth-container { width:100%; max-width:480px; }
 
     .auth-box {
-      max-width: 400px;
-      margin: auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      background: var(--white);
+      padding:32px;
+      border-radius:14px;
+      box-shadow: 0 12px 36px rgba(11,61,145,0.08);
+      animation: slideUp .32s ease;
     }
 
-    h2 {
-      text-align: center;
-      color: #c8102e;
-      margin-bottom: 20px;
+    @keyframes slideUp {
+      from { opacity:0; transform: translateY(18px); }
+      to { opacity:1; transform: translateY(0); }
     }
 
+    .logo-container { text-align:center; margin-bottom:18px; }
+    .logo-container img { height:56px; border-radius:8px; display:block; margin:0 auto 12px; }
+
+    h2 { text-align:center; color:var(--red); margin-bottom:6px; font-size:1.4rem; }
+    .subtitle { text-align:center; color:var(--muted); margin-bottom:18px; }
+
+    .input-group { position:relative; margin-bottom:14px; }
+    .input-group label { display:block; margin-bottom:8px; color:var(--text); font-weight:600; font-size:0.9rem; }
     input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
+      width:100%; padding:12px 14px; border:1px solid #e6e9ef; border-radius:10px; font-size:1rem;
+      transition: box-shadow .12s ease, border-color .12s ease;
     }
+    input:focus { outline:none; border-color: rgba(155,15,34,0.14); box-shadow:0 8px 20px rgba(11,61,145,0.04); }
+
+    .password-toggle {
+      position:absolute; right:12px; top:36px; cursor:pointer; font-size:1.05rem; user-select:none; background:transparent; border:none;
+    }
+
+    .row { display:flex; gap:10px; align-items:center; }
 
     button {
-      width: 100%;
-      padding: 12px;
-      background-color: #c8102e;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
+      width:100%; padding:12px 14px; background:var(--red); color:var(--white); border:none; border-radius:10px;
+      font-weight:700; font-size:1rem; cursor:pointer; margin-top:8px;
+      box-shadow: 0 8px 26px rgba(155,15,34,0.08);
+    }
+    button[disabled] { opacity:.6; cursor:not-allowed; transform:none; box-shadow:none; }
+    button.secondary {
+      background:transparent; color:var(--red); border:2px solid var(--red); box-shadow:none; margin-top:12px;
     }
 
-    button:hover {
-      background-color: #a50e24;
+    .divider { text-align:center; margin:18px 0; position:relative; }
+    .divider::before {
+      content:''; position:absolute; left:0; right:0; top:50%; height:1px; background:#eef2f8;
     }
+    .divider span { position:relative; padding:0 12px; background:var(--white); color:var(--muted); font-size:.9rem; }
 
     #feedback {
-      text-align: center;
-      margin-top: 15px;
-      font-weight: bold;
+      display:none; margin-top:12px; padding:10px; border-radius:8px; font-weight:600;
+    }
+    #feedback.success { background:#e6ffef; color:#0b6b2f; border:1px solid rgba(40,167,69,0.12); display:block; }
+    #feedback.error { background:#fff0f0; color:#8a1e1e; border:1px solid rgba(200,16,46,0.08); display:block; }
+
+    .mode-toggle { text-align:center; margin-top:10px; color:var(--muted); font-size:0.95rem; }
+    .mode-toggle a { color:var(--red); cursor:pointer; font-weight:600; }
+
+    .back-link { text-align:center; margin-top:14px; font-size:0.95rem; }
+    .back-link a { color:var(--muted); text-decoration:none; }
+    .back-link a:hover { text-decoration:underline; color:var(--dark-red); }
+
+    @media (max-width:480px) {
+      .auth-box { padding:22px; }
+      h2 { font-size:1.2rem; }
     }
 
-    .back-link {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .back-link a {
-      color: #c8102e;
-      text-decoration: none;
-    }
-
-    .back-link a:hover {
-      text-decoration: underline;
-    }
+    /* focus-visible improvements */
+    :focus-visible { outline: 3px solid rgba(11,61,145,0.08); outline-offset: 2px; border-radius: 8px; }
   </style>
 </head>
 <body>
-  <div class="auth-box">
-    <h2>🔐 Client Login</h2>
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
-    <button id="loginBtn">Log In</button>
-    <button id="signupBtn" style="margin-top:10px;">Sign Up</button>
-    <p id="feedback"></p>
-    <div class="back-link">
-      <a href="index.html">← Back to Home</a>
+  <div class="auth-container" role="main">
+    <div class="auth-box" aria-labelledby="formTitle">
+      <div class="logo-container" aria-hidden="true">
+        <img src="logo.png" alt="ParcelForce logo" onerror="this.style.display='none'"/>
+      </div>
+
+      <h2 id="formTitle">🔐 Welcome Back</h2>
+      <p class="subtitle" id="formSubtitle">Sign in to track your parcels</p>
+
+      <form id="authForm" novalidate>
+        <div class="input-group">
+          <label for="email">Email Address</label>
+          <input id="email" type="email" inputmode="email" autocomplete="email" required aria-required="true" />
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password" required aria-required="true" />
+          <button type="button" class="password-toggle" id="togglePassword" aria-label="Show password">👁️</button>
+        </div>
+
+        <button type="button" id="loginBtn"><span id="loginBtnText">Log In</span></button>
+
+        <div class="divider" id="divider"><span>OR</span></div>
+
+        <button type="button" id="signupBtn" class="secondary"><span id="signupBtnText">Create New Account</span></button>
+
+        <div id="feedback" role="status" aria-live="polite"></div>
+
+        <div class="mode-toggle" id="modeText">Don't have an account? <a id="switchLink">Sign up</a></div>
+
+        <div class="back-link">
+          <a href="index.html">← Back to Home</a>
+        </div>
+      </form>
     </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      createUserWithEmailAndPassword
-    } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBqymK8EWPa9s7c_2uTUXzBONK3XfTipFU",
-      authDomain: "parcelforcetracker.firebaseapp.com",
-      projectId: "parcelforcetracker",
-      appId: "1:408904759435:web:eba15d67580426198bbc8e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    const feedback = document.getElementById('feedback');
-
-    document.getElementById("loginBtn").addEventListener("click", () => {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          feedback.textContent = "✅ Logged in";
-          window.location.href = "dashboard.html";
-        })
-        .catch((error) => {
-          feedback.textContent = "❌ " + error.message;
-        });
-    });
-
-    document.getElementById("signupBtn").addEventListener("click", () => {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          feedback.textContent = "✅ Account created. You can now log in.";
-        })
-        .catch((error) => {
-          feedback.textContent = "❌ " + error.message;
-        });
-    });
-  </script>
+  <!-- Local client-side auth script (no backend / no Firebase) -->
+  <script type="module" src="auth.js"></script>
 </body>
 </html>
