@@ -424,51 +424,6 @@ a:focus, button:focus, input:focus {
         ⚠️ <strong>Parcel On Hold:</strong> Your parcel is currently being held in transit because the Commercial Invoice / Customs Declaration document has not been provided.
       </p>
 
-      <!-- Invoice Section (only shown if invoice exists) -->
-      <div class="invoice-section" id="invoiceSection" style="display:none; margin-top:12px; border: 2px solid var(--brand-navy); border-radius: 12px; padding: 16px; background: #f8fbff;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <h3 style="margin:0; color:var(--brand-navy); font-size: 1.1rem;">📄 Invoice Details</h3>
-          <button class="btn btn-ghost" id="downloadInvoiceBtn" style="font-size: 0.85rem; padding: 6px 10px;">Download PDF</button>
-        </div>
-        
-        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.95rem;">
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--muted); font-weight: 600;">Invoice #:</span>
-            <span style="font-weight: 700;" id="invoiceNumber">—</span>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--muted); font-weight: 600;">Date Issued:</span>
-            <span id="invoiceDate">—</span>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--muted); font-weight: 600;">Description:</span>
-            <span id="invoiceDesc" style="text-align: right; max-width: 60%;">—</span>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--muted); font-weight: 600;">Weight:</span>
-            <span id="invoiceWeight">—</span>
-          </div>
-          
-          <hr style="border:none; border-top: 1px solid rgba(11,61,145,0.1); margin: 8px 0;" />
-          
-          <div id="invoiceCharges" style="display: flex; flex-direction: column; gap: 6px;">
-            <!-- Charges will be inserted here -->
-          </div>
-          
-          <hr style="border:none; border-top: 1px solid rgba(11,61,145,0.1); margin: 8px 0;" />
-          
-          <div style="display: flex; justify-content: space-between; font-size: 1.05rem; font-weight: 700;">
-            <span style="color: var(--brand-red);">Total Amount:</span>
-            <span style="color: var(--brand-red);" id="invoiceTotal">—</span>
-          </div>
-          
-          <div style="margin-top: 8px; padding: 10px; background: #fff3cd; border-radius: 8px; border-left: 3px solid #ff9800;">
-            <span style="font-weight: 600;">Payment Status: </span>
-            <span id="paymentStatus" style="font-weight: 700; color: #ff6b00;">—</span>
-          </div>
-        </div>
-      </div>
-
       <div class="qr-area" style="margin-top:8px;">
         <h3 style="margin:8px 0 6px 0;color:var(--brand-navy)">QR / Share</h3>
         <div class="qr-canvas" id="qrCodeContainer"></div>
@@ -555,19 +510,7 @@ a:focus, button:focus, input:focus {
       deliveryDate: "2025-12-02",
       checkpoint: "Parcel is currently in transit from London to South Africa",
       coords: [-26.2041, 28.0473],
-      status: "in_transit",
-      invoice: {
-        invoiceNumber: "INV-2025-001",
-        dateIssued: "2025-12-01",
-        description: "International parcel shipment from London to South Africa",
-        weight: "2.5 kg",
-        charges: [
-          { item: "Shipping Fee", amount: 120.00, currency: "GBP" },
-          { item: "Insurance", amount: 15.00, currency: "GBP" }
-        ],
-        totalAmount: { value: 135.00, currency: "GBP" },
-        paymentStatus: "Pending"
-      }
+      status: "in_transit"
     }
   };
 
@@ -605,37 +548,6 @@ a:focus, button:focus, input:focus {
   qs('recipientAddress').textContent = parcel.recipient.address;
   qs('eta').textContent = parcel.deliveryDate;
   qs('currentCheckpoint').textContent = parcel.checkpoint;
-
-  // Populate invoice if exists
-  if (parcel.invoice) {
-    const invoiceSection = qs('invoiceSection');
-    invoiceSection.style.display = 'block';
-    
-    qs('invoiceNumber').textContent = parcel.invoice.invoiceNumber;
-    qs('invoiceDate').textContent = parcel.invoice.dateIssued;
-    qs('invoiceDesc').textContent = parcel.invoice.description;
-    qs('invoiceWeight').textContent = parcel.invoice.weight;
-    qs('paymentStatus').textContent = parcel.invoice.paymentStatus;
-    
-    // Populate charges
-    const chargesContainer = qs('invoiceCharges');
-    parcel.invoice.charges.forEach(charge => {
-      const chargeDiv = document.createElement('div');
-      chargeDiv.style.cssText = 'display: flex; justify-content: space-between;';
-      chargeDiv.innerHTML = `
-        <span style="color: var(--muted);">${charge.item}:</span>
-        <span>${charge.currency} ${charge.amount.toFixed(2)}</span>
-      `;
-      chargesContainer.appendChild(chargeDiv);
-    });
-    
-    qs('invoiceTotal').textContent = `${parcel.invoice.totalAmount.currency} ${parcel.invoice.totalAmount.value.toFixed(2)}`;
-    
-    // Download invoice button
-    qs('downloadInvoiceBtn').addEventListener('click', () => {
-      generateInvoicePDF(parcel, ref);
-    });
-  }
 
   // Status list
   const statusList = qs('statusList');
@@ -773,137 +685,6 @@ a:focus, button:focus, input:focus {
   setInterval(() => {
     qs('lastUpdated').textContent = 'Last update: ' + formatISONow();
   }, 60000);
-
-  // Function to generate invoice PDF (simple text-based)
-  function generateInvoicePDF(parcel, trackingRef) {
-    const invoice = parcel.invoice;
-    
-    // Create a printable invoice HTML
-    const invoiceWindow = window.open('', '_blank');
-    invoiceWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Invoice ${invoice.invoiceNumber}</title>
-        <style>
-          body { font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
-          .header { text-align: center; border-bottom: 3px solid #9B0F22; padding-bottom: 20px; margin-bottom: 30px; }
-          .header h1 { color: #9B0F22; margin: 0; }
-          .info-section { margin: 20px 0; }
-          .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
-          .info-label { font-weight: bold; color: #666; }
-          .charges { margin: 30px 0; }
-          .charge-item { display: flex; justify-content: space-between; padding: 10px 0; }
-          .total { font-size: 1.2em; font-weight: bold; color: #9B0F22; border-top: 2px solid #9B0F22; padding-top: 15px; margin-top: 15px; }
-          .footer { margin-top: 50px; text-align: center; color: #666; font-size: 0.9em; }
-          @media print { body { padding: 20px; } }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>PARCELFORCE INTERNATIONAL</h1>
-          <p>Commercial Invoice</p>
-        </div>
-        
-        <div class="info-section">
-          <div class="info-row">
-            <span class="info-label">Invoice Number:</span>
-            <span>${invoice.invoiceNumber}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Date Issued:</span>
-            <span>${invoice.dateIssued}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Tracking Number:</span>
-            <span>${trackingRef}</span>
-          </div>
-        </div>
-        
-        <div class="info-section">
-          <h3>Sender Details</h3>
-          <div class="info-row">
-            <span class="info-label">Name:</span>
-            <span>${parcel.sender.name}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Address:</span>
-            <span>${parcel.sender.address}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Phone:</span>
-            <span>${parcel.sender.phone || 'N/A'}</span>
-          </div>
-        </div>
-        
-        <div class="info-section">
-          <h3>Recipient Details</h3>
-          <div class="info-row">
-            <span class="info-label">Name:</span>
-            <span>${parcel.recipient.name}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Address:</span>
-            <span>${parcel.recipient.address}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Phone:</span>
-            <span>${parcel.recipient.phone || 'N/A'}</span>
-          </div>
-        </div>
-        
-        <div class="info-section">
-          <h3>Shipment Details</h3>
-          <div class="info-row">
-            <span class="info-label">Description:</span>
-            <span>${invoice.description}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Weight:</span>
-            <span>${invoice.weight}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Expected Delivery:</span>
-            <span>${parcel.deliveryDate}</span>
-          </div>
-        </div>
-        
-        <div class="charges">
-          <h3>Charges</h3>
-          ${invoice.charges.map(charge => `
-            <div class="charge-item">
-              <span>${charge.item}</span>
-              <span>${charge.currency} ${charge.amount.toFixed(2)}</span>
-            </div>
-          `).join('')}
-          
-          <div class="total">
-            <div style="display: flex; justify-content: space-between;">
-              <span>Total Amount:</span>
-              <span>${invoice.totalAmount.currency} ${invoice.totalAmount.value.toFixed(2)}</span>
-            </div>
-          </div>
-          
-          <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-left: 4px solid #ff9800; border-radius: 8px;">
-            <strong>Payment Status:</strong> ${invoice.paymentStatus}
-          </div>
-        </div>
-        
-        <div class="footer">
-          <p>ParcelForce International Courier &copy; ${new Date().getFullYear()}</p>
-          <p>For inquiries, contact: support@parcelforce.com</p>
-        </div>
-        
-        <script>
-          window.onload = () => {
-            setTimeout(() => window.print(), 500);
-          };
-        </script>
-      </body>
-      </html>
-    `);
-    invoiceWindow.document.close();
-  }
 
 })();
 </script>
