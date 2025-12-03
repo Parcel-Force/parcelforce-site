@@ -1,0 +1,181 @@
+/* Main Styles for ParcelForce */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@600;700&display=swap');
+
+:root {
+  /* Brand Colors */
+  --brand-red: #9B0F22;
+  --brand-red-dark: #7F0D1A;
+  --brand-red-rgb: 155, 15, 34;
+  --brand-navy: #0B3D91;
+  
+  /* UI Colors */
+  --bg: #F7F8FA;
+  --card: #FFFFFF;
+  --muted: #6B7280;
+  --text: #0F1724;
+  --glass: rgba(255,255,255,0.6);
+  --shadow: 0 6px 22px rgba(11,61,145,0.08);
+  --radius: 12px;
+  
+  /* Layout */
+  --container: 1200px;
+  --gap: 20px;
+}
+
+/* Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(180deg, var(--bg), #ffffff);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.45;
+  transition: background .25s ease, color .25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Header Styles */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5%;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+nav a:hover {
+  color: var(--brand-red);
+}
+
+/* Hero Section */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  margin-top: 60px; /* Account for fixed header */
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(5,15,30,0.35), rgba(5,15,30,0.25));
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.hero p {
+  font-size: 1.25rem;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+/* Tracking Form */
+.tracking-form {
+  display: flex;
+  max-width: 600px;
+  margin: 2rem auto;
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.tracking-form input {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border: none;
+  font-size: 1rem;
+  outline: none;
+}
+
+.tracking-form button {
+  background: var(--brand-red);
+  color: white;
+  border: none;
+  padding: 0 2rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.tracking-form button:hover {
+  background: var(--brand-red-dark);
+}
+
+/* Dark Mode */
+body.dark-mode {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --glass: rgba(30, 41, 59, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  
+  nav ul {
+    gap: 1rem;
+  }
+  
+  .tracking-form {
+    flex-direction: column;
+  }
+  
+  .tracking-form button {
+    padding: 1rem;
+  }
+}

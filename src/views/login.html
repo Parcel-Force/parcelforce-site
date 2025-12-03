@@ -4,16 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login | ParcelForce</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="auth.css" />
+  <link rel="icon" href="../assets/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
 </head>
 <body>
   <div id="header" aria-hidden="false"></div>
 
   <main role="main">
     <div class="auth-container" aria-labelledby="authTitle">
-      <img src="logo.png" alt="ParcelForce Logo" class="auth-logo" />
+      <img src="../assets/logo.png" alt="ParcelForce Logo" class="auth-logo" />
       <h1 id="authTitle">Welcome Back</h1>
       <p class="auth-subtitle">Log in to track your parcels</p>
 
@@ -54,7 +54,8 @@
             <input type="checkbox" id="remember" name="remember" />
             Remember me
           </label>
-          <a href="forgot.html" class="small-link" style="margin-left:auto;">Forgot password?</a>
+          <a href="#" class="forgot-password">Forgot password?</a>
+          <a href="../views/register.html" class="signup-link">Don't have an account? Sign up</a>
         </div>
 
         <div id="errorMsg" class="error-message" role="alert" aria-live="assertive" style="display:none;"></div>
@@ -95,7 +96,7 @@
     loadLayout();
   </script>
 
-  <script type="module" src="login.js"></script>
+  <script type="module" src="../js/login.js"></script>
 
   <style>
     /* Minimal spinner animation (kept here in case your CSS files don't include it) */

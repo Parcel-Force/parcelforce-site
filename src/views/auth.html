@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Login | ParcelForce</title>
+  <link rel="icon" href="../assets/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth-styles.css" />
+</head>
+<body>
+  <div class="auth-container" role="main">
+    <div class="auth-box" aria-labelledby="formTitle">
+      <div class="logo-container" aria-hidden="true">
+        <img src="../assets/logo.png" alt="ParcelForce logo" onerror="this.style.display='none'"/>
+      </div>
+
+      <h2 id="formTitle">🔐 Welcome Back</h2>
+      <p class="subtitle" id="formSubtitle">Sign in to track your parcels</p>
+
+      <form id="authForm" novalidate>
+        <div class="input-group">
+          <label for="email">Email Address</label>
+          <input id="email" type="email" inputmode="email" autocomplete="email" required aria-required="true" />
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password" required aria-required="true" />
+          <button type="button" class="password-toggle" id="togglePassword" aria-label="Show password">👁️</button>
+        </div>
+
+        <button type="button" id="loginBtn"><span id="loginBtnText">Log In</span></button>
+
+        <div class="divider" id="divider"><span>OR</span></div>
+
+        <button type="button" id="signupBtn" class="secondary"><span id="signupBtnText">Create New Account</span></button>
+
+        <div id="feedback" role="status" aria-live="polite"></div>
+
+        <div class="mode-toggle" id="modeText">Don't have an account? <a id="switchLink">Sign up</a></div>
+
+        <div class="back-link">
+          <a href="index.html">← Back to Home</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/auth.js"></script>
+</body>
+</html>
