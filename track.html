@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ParcelForce | Live Tracker</title>
-<link rel="icon" href="favicon.ico" type="image/x-icon" />
-
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ParcelForce | Live Package Tracker</title>
+  <meta name="description" content="Track your ParcelForce shipment in real-time with live updates and delivery status.">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <meta name="theme-color" content="#9B0F22">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%239B0F22'/><rect x='20' y='20' width='60' height='60' rx='8' fill='%23FFFFFF'/><rect x='30' y='30' width='40' height='40' rx='4' fill='%230B3D91'/><rect x='45' y='45' width='10' height='10' rx='1' fill='%23FFFFFF'/></svg>">
 
 <style>
 /*** ParcelForce — Redesigned track.html ***/
@@ -338,8 +340,8 @@ a:focus, button:focus, input:focus {
 <div class="wrap" role="main">
   <header class="track-header" aria-label="Tracking header">
     <div class="brand">
-      <img src="logo.png" alt="ParcelForce logo" />
-      <div>
+      <div class="logo">PF</div>
+      <div class="brand-text">
         <h1>ParcelForce Live Tracker</h1>
         <div class="breadcrumbs" aria-hidden="true">Home / Tracking</div>
       </div>
@@ -446,6 +448,27 @@ a:focus, button:focus, input:focus {
 <!-- QRCode JS -->
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
 
+<!-- Add some basic logo styling -->
+<style>
+.brand .logo {
+  width: 40px;
+  height: 40px;
+  background: #9B0F22;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+</style>
+
 <!-- Main Script -->
 <script>
 (function() {
@@ -493,18 +516,18 @@ a:focus, button:focus, input:focus {
     },
     "PF99564008CN": {
       sender: {
-        name: "George Callaghan",
+        name: "Anthony Callaghan",
         address: "103 Notting Hill Gate, Kensington, London W11 3LB",
-        phone: "+357 95 585645"
+        phone: "+1 954 264 4309"
       },
       recipient: {
-        name: "Nicola Chadayan",
-        address: "17 Oxford Road, Bedford Gardens, South Africa",
-        phone: "+27 83 444 5181"
+        name: "Lucinda Williams",
+        address: "39 Pepperbuch Street Extension 32, Bethelsdrop, 6059 Port Elizabeth South Africa",
+        phone: "+27 834 173 209"
       },
       journey: [
-        "Collected — 28 Nov 2025",
-        "Cleared export hub — 01 Dec 2025",
+        "Collected — 02 Dec 2025",
+        "Cleared export hub — 02 Dec 2025",
         "Out for delivery — 02 Dec 2025"
       ],
       deliveryDate: "2025-12-02",
