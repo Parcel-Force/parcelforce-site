@@ -90,31 +90,95 @@
     /* Nav */
     nav{
       display:flex;
-      gap:12px;
+      gap: 6px;
       align-items:center;
       flex:1;
       justify-content:center;
       flex-wrap:wrap;
+      padding: 8px 0;
     }
     nav a{
       color: var(--brand-navy);
-      text-decoration:none;
-      padding:8px 12px;
-      border-radius:8px;
-      font-weight:600;
-      font-size:0.95rem;
-      transition: transform .12s ease, background .12s ease;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      border: 1px solid transparent;
+      display: inline-block;
+      line-height: 1.5;
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.3px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
+    nav a:before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--brand-red);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+    
     nav a:hover,
-    nav a:focus{
-      background: rgba(11,61,145,0.06);
-      transform: translateY(-2px);
+    nav a:focus {
+      color: var(--brand-red);
+      transform: translateY(-1px);
       outline: none;
-      color: var(--brand-navy);
+      background: rgba(155, 15, 34, 0.04);
     }
-    nav a[aria-current="page"]{
-      background: linear-gradient(90deg, rgba(var(--brand-red-rgb),0.08), rgba(11,61,145,0.06));
-      box-shadow: inset 0 -3px 0 rgba(var(--brand-red-rgb),0.12);
+    
+    nav a:hover:before,
+    nav a:focus:before {
+      width: 70%;
+    }
+    nav a:active{
+      transform: translateY(0);
+      background-color: rgba(11, 61, 145, 0.1);
+    }
+    nav a[href="auth.html"] {
+      background-color: var(--brand-red);
+      color: white !important;
+      border: 1px solid var(--brand-red);
+      margin-left: 12px;
+      padding: 10px 22px;
+      border-radius: 6px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    nav a[href="auth.html"]:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      z-index: -1;
+    }
+    nav a[href="auth.html"]:hover {
+      background-color: var(--brand-red);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(155, 15, 34, 0.25);
+    }
+    
+    nav a[href="auth.html"]:hover:before {
+      width: 100%;
+    }
+    nav a[href="auth.html"]:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(155, 15, 34, 0.2);
     }
 
     /* Toggle & search area */
@@ -181,88 +245,192 @@
       content:"";
       position:absolute;
       inset:0;
-      background: linear-gradient(180deg, rgba(5,15,30,0.35), rgba(5,15,30,0.25));
+      background: linear-gradient(90deg, rgba(5,15,30,0.75) 0%, rgba(5,15,30,0.5) 50%, rgba(5,15,30,0.2) 100%);
       z-index:0;
     }
 
     /* overlay content */
     .hero-overlay{
-      position:relative;
-      z-index:2;
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-      align-items:center;
-      text-align:center;
-      padding-block:48px;
+      position: relative;
+      z-index: 2;
+      min-height: 90vh;
+      padding: 140px 40px 100px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(90deg, rgba(5, 15, 30, 0.9) 0%, rgba(5, 15, 30, 0.7) 50%, rgba(5, 15, 30, 0.4) 100%);
     }
-
-    /* Heading scale (fluid) */
-    .hero-overlay h1{
-      margin:0;
-      font-family: "Poppins", "Inter", system-ui, sans-serif;
-      font-weight:700;
-      color: #FFF;
-      text-shadow: 0 6px 24px rgba(3,8,23,0.45);
-      font-size: clamp(1.6rem, 4.6vw, 3.2rem);
-      letter-spacing: -0.01em;
+    
+    .hero-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
     }
-    .hero-overlay p{
-      margin:0;
-      color: rgba(255,255,255,0.92);
-      font-size: clamp(0.95rem, 2.6vw, 1.1rem);
-      max-width: 860px;
-      line-height:1.4;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    
+    .hero-text {
+      max-width: 600px;
     }
-
-    /* Tracking input & button grouped */
-    .hero-overlay input#trackingInput{
-      width: min(92%, 520px);
-      padding:14px 16px;
-      border-radius: 999px;
-      border: none;
-      font-size:1rem;
-      background: rgba(255,255,255,0.95);
-      color: var(--brand-navy);
-      box-shadow: 0 6px 20px rgba(3,8,23,0.12);
+    
+    .hero h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 3.75rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin: 0 0 20px 0;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+    
+    .hero h1 .highlight {
+      color: #FFD700;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .hero h1 .highlight:after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 215, 0, 0.2);
+      z-index: -1;
+      border-radius: 4px;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.25rem;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 2.5rem;
+      max-width: 520px;
+      font-weight: 400;
+    }
+    
+    .tracking-container {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .tracking-input-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+    
+    .tracking-input-group input {
+      flex: 1;
+      padding: 16px 24px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    .tracking-input-group input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .tracking-input-group input:focus {
       outline: none;
+      border-color: #FFD700;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
     }
-    .hero-overlay input#trackingInput::placeholder{
-      color: #9CA3AF;
-    }
-
-    /* Track button (uses the darker red) */
-    #trackBtn{
-      margin-top:6px;
-      display:inline-block;
-      padding:12px 28px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--brand-red), var(--brand-red-dark));
-      color: white;
+    
+    .track-button {
+      background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+      color: #0F1724;
       border: none;
-      font-weight:700;
-      font-size:1rem;
-      cursor:pointer;
-      box-shadow: 0 8px 30px rgba(var(--brand-red-rgb),0.16);
-      transition: transform .15s ease, box-shadow .15s ease, opacity .12s ease;
+      padding: 0 36px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      height: 56px;
+      box-shadow: 0 4px 15px rgba(255, 184, 0, 0.3);
     }
-    #trackBtn:hover{ transform: translateY(-3px); box-shadow: 0 12px 36px rgba(var(--brand-red-rgb),0.22); }
-    #trackBtn:active{ transform: translateY(-1px); }
-    #trackBtn:disabled{ opacity:.7; cursor:not-allowed; box-shadow:none; transform:none; }
-
-    /* spinner */
-    .spinner{
-      width:40px;
-      height:40px;
-      border-radius:50%;
-      border:4px solid rgba(255,255,255,0.18);
-      border-top-color: rgba(255,255,255,0.95);
-      display:none;
-      margin-top:12px;
-      animation: spin 0.9s linear infinite;
+    
+    .track-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 184, 0, 0.4);
     }
-    @keyframes spin{ to{ transform: rotate(360deg); } }
+    
+    .hero-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 2rem;
+    }
+    
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .feature:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .feature span {
+      color: #FFD700;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    
+    .trust-badge {
+      display: inline-flex;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 8px 16px;
+      border-radius: 50px;
+      backdrop-filter: blur(5px);
+    }
+    
+    .trust-badge span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #fff;
+    }
+    
+    .trust-badge span:not(:last-child):after {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      margin-left: 12px;
+    }
 
     /* SECTION default */
     section{
@@ -437,12 +605,62 @@
       border-color: rgba(var(--brand-red-rgb),0.9) !important;
     }
 
-    /* End of stylesheet */
+    /* Live Chat Button */
+    .live-chat-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--brand-red);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    
+    .live-chat-btn:hover {
+      background: var(--brand-red-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    }
+    
+    .live-chat-btn i {
+      pointer-events: none;
+    }
   </style>
+  <!--Start of Tawk.to Script-->
+  <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/692eef32e58f1d197d8940b8/1jbflcnlc';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+    })();
+    
+    // Function to toggle chat
+    function toggleChat() {
+      if (Tawk_API.toggle) {
+        Tawk_API.toggle();
+      } else {
+        console.log('Tawk API not loaded yet');
+      }
+    }
+  </script>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="ParcelForce Logo" class="logo" />
+    <img src="../assets/logo.png" alt="ParcelForce Logo" class="logo" />
     <nav>
       <a href="#home">Home</a>
       <a href="#about">About</a>
@@ -461,15 +679,94 @@
 
   <section class="hero" id="home">
     <video autoplay muted loop playsinline class="bg-video">
-      <source src="courier-bg.mp4" type="video/mp4" />
+      <source src="../assets/courier-bg.mp4" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
     <div class="hero-overlay">
-      <h1>Track Your Parcel</h1>
-      <p>Real-time updates. Global reach. Premium service.</p>
-      <input type="text" id="trackingInput" placeholder="Enter tracking number" />
-      <button id="trackBtn" onclick="trackItem()">Track Now</button>
-      <div id="spinner" class="spinner"></div>
+      <div class="hero-content">
+        <div class="hero-text">
+          <div class="trust-badge">
+            <span>🚚 24/7 Global Express</span>
+            <span>🌍 150+ Countries</span>
+            <span>🛡️ Fully Insured</span>
+          </div>
+          <h1>Premium <span class="highlight">Courier Services</span> for Your Most Important Shipments</h1>
+          <p class="hero-subtitle">Experience seamless logistics with our award-winning delivery network. Track in real-time, enjoy door-to-door service, and benefit from our 99.9% on-time delivery guarantee.</p>
+          
+          <div class="tracking-container">
+            <h3 style="margin: 0 0 20px 0; font-size: 1.25rem; color: #fff; font-weight: 600;">Track Your Shipment</h3>
+            <div class="tracking-input-group">
+              <input type="text" id="trackingInput" placeholder="Enter tracking number (e.g., PF123456789GB)" />
+              <button id="trackBtn" onclick="trackItem()" class="track-button">
+                <span>Track Now</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <div id="spinner" class="spinner"></div>
+          </div>
+          
+          <div class="hero-features">
+            <div class="feature">
+              <span>✓</span> Same-Day Delivery
+            </div>
+            <div class="feature">
+              <span>✓</span> 24/7 Support
+            </div>
+            <div class="feature">
+              <span>✓</span> End-to-End Tracking
+            </div>
+          </div>
+        </div>
+        
+        <div class="hero-image" style="position: relative; z-index: 2;">
+          <div style="position: relative; padding: 20px;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255, 255, 255, 0.03); border-radius: 16px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);"></div>
+            <div style="position: relative; z-index: 2; padding: 20px; text-align: center;">
+              <div style="margin-bottom: 20px; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8);">SAMPLE TRACKING</div>
+              <div style="background: rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px dashed rgba(255, 255, 255, 0.2);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                  <div style="text-align: left;">
+                    <div style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.7);">TRACKING NUMBER</div>
+                    <div style="font-weight: 600; color: #FFD700;">PF987654321GB</div>
+                  </div>
+                  <div style="text-align: right;">
+                    <div style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.7);">STATUS</div>
+                    <div style="color: #4ade80; font-weight: 600;">In Transit</div>
+                  </div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                  <div style="height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 2px; margin-bottom: 10px; overflow: hidden;">
+                    <div style="width: 75%; height: 100%; background: #4ade80; border-radius: 2px;"></div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: rgba(255, 255, 255, 0.7);">
+                    <span>Picked Up</span>
+                    <span>In Transit</span>
+                    <span>Out for Delivery</span>
+                    <span>Delivered</span>
+                  </div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 8px; border-left: 3px solid #FFD700;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <span style="font-weight: 500;">In Transit</span>
+                    <span style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7);">Today, 10:45 AM</span>
+                  </div>
+                  <div style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.8);">Package is in transit to the destination facility</div>
+                </div>
+              </div>
+              <button style="background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px; margin: 0 auto; transition: all 0.3s ease;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 8V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M8 12H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Create Shipment
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -521,10 +818,14 @@
   </section>
 
   <footer>
-    <img src="logo.png" alt="ParcelForce Logo" />
+    <img src="../assets/logo.png" alt="ParcelForce Logo" />
     <p><strong>ParcelForce International Courier</strong> &copy; 2025. All rights reserved.</p>
     <p>Privacy | Terms | Accessibility</p>
   </footer>
+
+  <button class="live-chat-btn" onclick="toggleChat()" aria-label="Open live chat">
+    💬
+  </button>
 
   <script>
     // Track Item Function (local, no Firebase)
