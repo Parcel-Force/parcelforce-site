@@ -472,7 +472,6 @@ a:focus, button:focus, input:focus {
 <!-- Main Script -->
 <script>
 (function() {
-  // Sample data - FIXED: All tracking numbers now properly inside SAMPLE object
   const SAMPLE = {
     "PF557690344CN": {
       sender: {
@@ -528,15 +527,80 @@ a:focus, button:focus, input:focus {
       journey: [
         "Collected — 03 March 2026",
         "Cleared export hub — 03 March 2026",
-        "Out for delivery — 04 March 2026"
+        "Out for delivery — 04 March  2026"
       ],
       deliveryDate: "2026-03-03",
       checkpoint: "Customs and delivery fee of R4000 will be payable upon arrival of the shipment in South Africa.",
       coords: [-26.2041, 28.0473],
       status: "in_transit"
+    },
+
+    "PF89077654CN": {
+      sender: {
+        name: "Callaghan",
+        address: "103 Notting Hill Gate, Kensington, London W11 3LB",
+        phone: "+1 954 264 4309"
+      },
+      recipient: {
+        name: "Veroza Daniels",
+        address: "39 Reginald Road Gelvandale Port Elizabeth South Africa",
+        phone: "+27 789784190"
+      },
+      journey: [
+        "Collected — 03 Mar 2026",
+        "Departed hub — 04 Mar 2026",
+        "In transit — 05 Mar 2026"
+      ],
+      deliveryDate: "2026-03-06",
+      checkpoint: "In transit. Awaiting next scan update. Customs and Delivery Fee of R2,550",
+      coords: [-26.2041, 28.0473],
+      status: "in_transit"
+    },
+    "PF228907765CN": {
+      sender: {
+        name: "Callaghan",
+        address: "103 Notting Hill Gate, Kensington, London W11 3LB",
+        phone: "+1 954 264 4309"
+      },
+      recipient: {
+        name: "Jamie-Lee Williams",
+        address: "4 Evie Davids Lorensia Park Somerset West South Africa",
+        phone: "+27 847911783"
+      },
+      journey: [
+        "Collected — 02 Mar 2026",
+        "Cleared export hub — 02 Mar 2026",
+        "Arrived at destination hub — 04 Mar 2026"
+      ],
+      deliveryDate: "2026-03-04",
+      checkpoint: "Arrived at destination hub. Preparing for delivery. Customs and Delivery of R2,550",
+      coords: [-33.9249, 18.4241],
+      status: "in_transit"
+    },
+    "PF389776345CN": {
+      sender: {
+        name: "Callaghan",
+        address: "103 Notting Hills Gate, Kensington, London W11 3LB",
+        phone: "+1 954 264 4309"
+      },
+      recipient: {
+        name: "Mary Ellen Jensen",
+        address: "36 Barracuda Cresent Nooitgedacht, Bishop Lavis Cape Town South Africa",
+        phone: "+27 837603243"
+      },
+      journey: [
+        "Collected — 03 Mar 2026",
+        "Departed hub — 03 Mar 2026",
+        "Out for delivery — 05 Mar 2026"
+      ],
+      deliveryDate: "2026-03-05",
+      checkpoint: "Out for delivery. Two iphones and items. Customs and Delivery Fee of R2,550",
+      coords: [-29.8587, 31.0218],
+      status: "in_transit"
     }
   };
 
+  
   // Helper functions
   function qs(id) { return document.getElementById(id); }
   
